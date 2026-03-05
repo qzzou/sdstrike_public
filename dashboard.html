@@ -17,6 +17,12 @@
   .welcome .label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: #5a9cf5; margin-bottom: 4px; }
   .welcome h2 { font-size: 1.3rem; font-weight: 900; }
   .welcome .team { font-size: 0.85rem; color: #aac4f5; margin-top: 4px; }
+  .welcome .role-badge { display: inline-block; margin-top: 10px; padding: 3px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; background: rgba(255,255,255,0.15); color: #fff; }
+
+  .pending-box { border: 2px solid #f0b429; border-radius: 8px; padding: 20px; text-align: center; background: #fffbf0; margin-bottom: 16px; }
+  .pending-box .icon { font-size: 2rem; display: block; margin-bottom: 10px; }
+  .pending-box h3 { font-size: 1rem; font-weight: 800; color: #b7860a; margin-bottom: 6px; }
+  .pending-box p { font-size: 0.85rem; color: #888; line-height: 1.5; }
 
   .section { background: #fff; border-radius: 8px; padding: 20px; margin-bottom: 16px; }
   .section h3 { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: #888; margin-bottom: 16px; }
@@ -39,7 +45,14 @@
   <div class="welcome">
     <div class="label">Welcome back</div>
     <h2 id="userName">Loading...</h2>
-    <div class="team" id="userEmail"></div>
+    <div class="team" id="teamName"></div>
+    <span class="role-badge" id="roleBadge" style="display:none;"></span>
+  </div>
+
+  <div class="pending-box" id="pendingBox" style="display:none;">
+    <span class="icon">&#9203;</span>
+    <h3>Awaiting Approval</h3>
+    <p>Your account is pending review. The admin will approve your request shortly. Check back soon!</p>
   </div>
 
   <div class="section">
@@ -63,6 +76,7 @@
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js';
   import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
+  import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
 
   // ── PASTE YOUR SAME FIREBASE CONFIG HERE ─────────────────────────────────
   const firebaseConfig = {
@@ -77,14 +91,42 @@
 
   const app  = initializeApp(firebaseConfig);
   const auth = getAuth(app);
+  const db   = getFirestore(app);
 
-  // Redirect to sign-in if not logged in
-  onAuthStateChanged(auth, (user) => {
+  // Redirect to sign-in if not logged in, otherwise load dashboard
+  onAuthStateChanged(auth, async (user) => {
     if (!user) {
       window.location.href = 'signin.html';
-    } else {
-      document.getElementById('userName').textContent = user.displayName || user.email;
-      document.getElementById('userEmail').textContent = user.email;
+      return;
+    }
+
+    // Fill name from Auth
+    document.getElementById('userName').textContent = user.displayName || user.email;
+
+    // Read user role from Firestore
+    const userSnap = await getDoc(doc(db, 'users', user.uid));
+    const userData = userSnap.exists() ? userSnap.data() : null;
+    const role = userData?.role || 'pending';
+
+    // Show role badge
+    const roleLabels = { admin: 'Admin', coach: 'Coach', player: 'Player', pending: 'Pending' };
+    const badge = document.getElementById('roleBadge');
+    badge.textContent = roleLabels[role] || role;
+    badge.style.display = 'inline-block';
+
+    // Show team name if assigned
+    if (userData?.teamId) {
+      const teamSnap = await getDoc(doc(db, 'teams', userData.teamId));
+      if (teamSnap.exists()) {
+        document.getElementById('teamName').textContent = teamSnap.data().name;
+      }
+    } else if (role === 'pending' && userData?.requestedRole) {
+      document.getElementById('teamName').textContent = `Requested: ${userData.requestedRole}`;
+    }
+
+    // Show pending notice
+    if (role === 'pending') {
+      document.getElementById('pendingBox').style.display = 'block';
     }
   });
 
