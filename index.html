@@ -6,17 +6,32 @@
 <title>SDStrike Basketball</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #222; background: #fff; max-width: 480px; margin: 0 auto; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #222; background: #fff; margin: 0 auto; }
 
   /* TOP BAR */
   .topbar { background: #1a3f7a; color: #fff; text-align: center; padding: 10px 16px; font-size: 0.8rem; font-weight: 600; }
   .topbar a { color: #fff; }
 
   /* NAV */
-  nav { display: flex; justify-content: space-between; align-items: center; padding: 2px 16px 6px; background: #fff; border-bottom: 3px solid #1a3f7a; position: sticky; top: 0; z-index: 100; }
-  nav .logo { display: flex; align-items: center; }
+  .nav-container { position: sticky; top: 0; z-index: 100; background: #fff; }
+  nav { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 2px 16px 6px; background: #fff; border-bottom: 3px solid #1a3f7a; }
+  nav .logo { display: flex; align-items: center; justify-content: center; }
   nav .logo img { height: 40px; }
-  nav a.nav-link { color: #1a3f7a; text-decoration: none; font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
+  nav a.nav-link { color: #1a3f7a; text-decoration: none; font-weight: 700; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; justify-self: end; }
+
+  /* HAMBURGER BUTTON */
+  .menu-btn { background: none; border: none; cursor: pointer; padding: 8px 4px; display: flex; flex-direction: column; gap: 5px; justify-self: start; }
+  .menu-btn span { display: block; width: 22px; height: 2px; background: #1a3f7a; border-radius: 2px; transition: transform 0.25s ease, opacity 0.25s ease; }
+  .menu-btn.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+  .menu-btn.open span:nth-child(2) { opacity: 0; }
+  .menu-btn.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+  /* DROPDOWN MENU */
+  .menu-dropdown { display: none; border-bottom: 3px solid #1a3f7a; background: #fff; }
+  .menu-dropdown.open { display: block; }
+  .menu-dropdown a { display: flex; align-items: center; gap: 10px; padding: 16px 20px; color: #1a3f7a; text-decoration: none; font-weight: 700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #f0f0f0; }
+  .menu-dropdown a:last-child { border-bottom: none; }
+  .menu-dropdown a:active { background: #f4f7ff; }
 
   /* HERO */
   .hero { background: #222; color: #fff; padding: 40px 20px 36px; text-align: center; position: relative; overflow: hidden; }
@@ -84,6 +99,90 @@
 
   /* FOOTER */
   footer { background: #222; color: #666; padding: 20px 16px; text-align: center; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* ============ MOBILE CAP (keep mobile look on small screens) ============ */
+  @media (max-width: 599px) {
+    body { max-width: 480px; }
+  }
+
+  /* ============ TABLET (600px – 1023px) ============ */
+  @media (min-width: 600px) {
+    /* Nav */
+    nav { padding: 4px 32px 8px; }
+    nav a.nav-link { font-size: 0.9rem; }
+
+    /* Hero */
+    .hero { padding: 50px 40px 44px; }
+    .hero h1 { font-size: 3rem; }
+    .hero p { font-size: 1.1rem; max-width: 540px; margin-left: auto; margin-right: auto; }
+
+    /* Gallery */
+    .gallery-slide { flex: 0 0 60%; }
+
+    /* Ticker */
+    .ticker { font-size: 0.9rem; padding: 16px 32px; }
+
+    /* Programs */
+    .programs { padding: 0 32px; max-width: 800px; margin: 0 auto; }
+
+    /* Stats */
+    .stats { max-width: 800px; margin: 0 auto; grid-template-columns: repeat(4, 1fr); }
+    .dark-block { padding: 32px 32px; }
+
+    /* About / Contact */
+    .about, .contact { padding: 40px 32px; }
+    .about p, .contact p { max-width: 600px; margin-left: auto; margin-right: auto; }
+    .about p { margin-bottom: 12px; }
+
+    /* Footer */
+    footer { padding: 24px 32px; }
+  }
+
+  /* ============ DESKTOP (1024px+) ============ */
+  @media (min-width: 1024px) {
+    /* Nav */
+    nav { padding: 6px 48px 10px; max-width: 1200px; margin: 0 auto; }
+    nav .logo img { height: 48px; }
+    nav a.nav-link { font-size: 0.95rem; }
+
+    /* Hero */
+    .hero { padding: 60px 48px 56px; }
+    .hero h1 { font-size: 3.6rem; }
+    .hero p { font-size: 1.15rem; max-width: 620px; }
+    .hero .btn { padding: 16px 40px; font-size: 1rem; }
+
+    /* Gallery */
+    .gallery { max-width: 100%; margin: 0 auto; padding: 16px 0 20px; }
+    .gallery-track { padding: 0 48px 14px; gap: 16px; }
+    .gallery-slide { flex: 0 0 38%; }
+
+    /* Ticker */
+    .ticker { font-size: 1rem; padding: 18px 48px; letter-spacing: 0.5px; }
+
+    /* Programs */
+    .programs { max-width: 960px; padding: 0 48px; }
+    .programs h2 { font-size: 1.5rem; padding: 36px 0 24px; }
+    .pricing-card h3 { font-size: 1rem; }
+    .pricing-card .price { font-size: 2.2rem; }
+    .pricing-card p { font-size: 0.9rem; }
+    .program-card { padding: 28px 28px; }
+    .program-card h3 { font-size: 1.1rem; }
+    .program-card p { font-size: 0.95rem; }
+
+    /* Stats */
+    .stats { max-width: 960px; }
+    .stat-item .num { font-size: 2.2rem; }
+    .stat-item .label { font-size: 0.8rem; }
+    .dark-block { padding: 40px 48px; }
+
+    /* About / Contact */
+    .about, .contact { padding: 48px; }
+    .about h2, .contact h2 { font-size: 1.4rem; }
+    .about p, .contact p { max-width: 700px; font-size: 1.05rem; }
+
+    /* Footer */
+    footer { padding: 28px 48px; font-size: 0.8rem; }
+  }
 </style>
 </head>
 <body>
@@ -92,10 +191,18 @@
   &#127936; Spring 2026 is here! &nbsp;|&nbsp; <a href="#contact">Contact us</a>
 </div>
 
-<nav>
-  <div class="logo"><img src="sdstrikelogo.svg" alt="SD Strike"></div>
-  <a href="https://docs.google.com/forms/d/e/1FAIpQLSfK__71O7koZuayCxLPjM4MMpA4Gy1IkX4Kkn_29KgoKGZwSg/viewform" class="nav-link" target="_blank">Sign Up</a>
-</nav>
+<div class="nav-container">
+  <nav>
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="logo"><img src="sdstrikelogo.svg" alt="SD Strike"></div>
+    <a href="https://docs.google.com/forms/d/e/1FAIpQLSfK__71O7koZuayCxLPjM4MMpA4Gy1IkX4Kkn_29KgoKGZwSg/viewform" class="nav-link" target="_blank">Sign Up</a>
+  </nav>
+  <div class="menu-dropdown" id="menuDropdown">
+    <a href="signin.html">&#128274; Log In</a>
+  </div>
+</div>
 
 <section class="hero">
   <div class="badge">San Diego Basketball</div>
@@ -231,6 +338,21 @@
     const slideWidth = track.querySelector('.gallery-slide').offsetWidth + 12;
     const index = Math.round(track.scrollLeft / slideWidth);
     dots.forEach((d, i) => d.classList.toggle('active', i === index));
+  });
+
+  const menuBtn = document.getElementById('menuBtn');
+  const menuDropdown = document.getElementById('menuDropdown');
+  menuBtn.addEventListener('click', () => {
+    const isOpen = menuDropdown.classList.toggle('open');
+    menuBtn.classList.toggle('open', isOpen);
+    menuBtn.setAttribute('aria-expanded', isOpen);
+  });
+  document.addEventListener('click', (e) => {
+    if (!menuBtn.contains(e.target) && !menuDropdown.contains(e.target)) {
+      menuDropdown.classList.remove('open');
+      menuBtn.classList.remove('open');
+      menuBtn.setAttribute('aria-expanded', false);
+    }
   });
 </script>
 </body>
