@@ -104,9 +104,15 @@
     document.getElementById('userName').textContent = user.displayName || user.email;
 
     // Read user role from Firestore
-    const userSnap = await getDoc(doc(db, 'users', user.uid));
-    const userData = userSnap.exists() ? userSnap.data() : null;
-    const role = userData?.role || 'pending';
+    let userData = null;
+    let role = 'pending';
+    try {
+      const userSnap = await getDoc(doc(db, 'users', user.uid));
+      userData = userSnap.exists() ? userSnap.data() : null;
+      role = userData?.role || 'pending';
+    } catch (err) {
+      console.error('Firestore read failed:', err);
+    }
 
     // Show role badge
     const roleLabels = { admin: 'Admin', coach: 'Coach', player: 'Player', pending: 'Pending' };
@@ -116,10 +122,12 @@
 
     // Show team name if assigned
     if (userData?.teamId) {
-      const teamSnap = await getDoc(doc(db, 'teams', userData.teamId));
-      if (teamSnap.exists()) {
-        document.getElementById('teamName').textContent = teamSnap.data().name;
-      }
+      try {
+        const teamSnap = await getDoc(doc(db, 'teams', userData.teamId));
+        if (teamSnap.exists()) {
+          document.getElementById('teamName').textContent = teamSnap.data().name;
+        }
+      } catch (_) {}
     } else if (role === 'pending' && userData?.requestedRole) {
       document.getElementById('teamName').textContent = `Requested: ${userData.requestedRole}`;
     }
