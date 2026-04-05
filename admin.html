@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel — SDStrike Basketball</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Barlow', sans-serif; color: #222; background: #f8f8f8; max-width: 480px; margin: 0 auto; min-height: 100vh; }
+
+  /* NAV */
+  nav { display: flex; justify-content: space-between; align-items: center; padding: 2px 16px 6px; background: #fff; border-bottom: 3px solid #1a3f7a; position: sticky; top: 0; z-index: 100; }
+  nav .logo img { height: 40px; display: block; }
+  .nav-right { display: flex; gap: 16px; align-items: center; }
+  .back-link { color: #1a3f7a; text-decoration: none; font-weight: 700; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 1px; }
+  .signout-btn { background: none; border: none; color: #888; font-weight: 700; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; font-family: inherit; }
+
+  /* HEADER */
+  .page-header { padding: 24px 16px 0; }
+  .page-header h1 { font-size: 1.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
+  .page-header p { font-size: 0.85rem; color: #888; margin-top: 4px; }
+
+  /* TABS */
+  .tabs { display: flex; border-bottom: 2px solid #e8e8e8; margin: 20px 0 0; padding: 0 16px; }
+  .tab-btn { padding: 12px 14px; background: none; border: none; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #888; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; font-family: inherit; position: relative; }
+  .tab-btn.active { color: #1a3f7a; border-bottom-color: #1a3f7a; }
+  .tab-count { display: inline-flex; align-items: center; justify-content: center; background: #c0392b; color: #fff; border-radius: 10px; font-size: 0.65rem; font-weight: 800; min-width: 18px; height: 18px; padding: 0 5px; margin-left: 5px; }
+  .tab-count.zero { background: #ccc; }
+
+  /* TAB CONTENT */
+  .tab-content { padding: 20px 16px 60px; display: none; }
+  .tab-content.active { display: block; }
+
+  /* CARDS */
+  .card { background: #fff; border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+  .card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .card-title { font-size: 0.95rem; font-weight: 700; }
+  .card-meta { font-size: 0.78rem; color: #888; margin-top: 3px; line-height: 1.4; }
+
+  /* ROLE BADGE */
+  .role-badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+  .role-pending { background: #fef3e2; color: #b7600a; }
+  .role-player  { background: #e8f0fe; color: #1a3f7a; }
+  .role-coach   { background: #e6f4ea; color: #1e7e34; }
+  .role-admin   { background: #fce4ec; color: #c2185b; }
+  .role-rejected { background: #f5f5f5; color: #999; }
+
+  /* ACTION BUTTONS */
+  .btn-row { display: flex; gap: 8px; margin-top: 14px; }
+  .btn { padding: 9px 16px; border: none; border-radius: 4px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; font-family: inherit; transition: opacity 0.2s; }
+  .btn:active { opacity: 0.75; }
+  .btn-approve { background: #1a3f7a; color: #fff; }
+  .btn-reject  { background: #fff; border: 2px solid #e0e0e0; color: #888; }
+  .btn-reject:hover { border-color: #c0392b; color: #c0392b; }
+  .btn-primary { background: #1a3f7a; color: #fff; }
+  .btn-secondary { background: #fff; border: 2px solid #e0e0e0; color: #555; }
+  .btn-danger { background: #fff; border: 2px solid #e0e0e0; color: #c0392b; }
+  .btn-sm { padding: 6px 12px; font-size: 0.72rem; }
+
+  /* EMPTY STATE */
+  .empty { text-align: center; padding: 40px 16px; color: #bbb; }
+  .empty .icon { font-size: 2.2rem; display: block; margin-bottom: 10px; }
+  .empty p { font-size: 0.9rem; }
+
+  /* FORM */
+  .form-section { background: #fff; border-radius: 8px; padding: 20px; margin-bottom: 16px; }
+  .form-section h3 { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: #888; margin-bottom: 16px; }
+  .form-group { margin-bottom: 16px; }
+  .form-group label { display: block; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #555; margin-bottom: 6px; }
+  .form-group input, .form-group select { width: 100%; padding: 12px 14px; border: 2px solid #e0e0e0; border-radius: 4px; font-size: 0.9rem; font-family: inherit; color: #222; outline: none; transition: border-color 0.2s; background: #fff; }
+  .form-group input:focus, .form-group select:focus { border-color: #1a3f7a; }
+  .form-row { display: flex; gap: 10px; }
+  .form-row .form-group { flex: 1; }
+
+  /* TEAM CARD */
+  .team-card { background: #fff; border-radius: 8px; padding: 16px; margin-bottom: 10px; }
+  .team-card-header { display: flex; justify-content: space-between; align-items: center; }
+  .team-card h4 { font-size: 0.95rem; font-weight: 700; }
+  .team-card .coach-info { font-size: 0.8rem; color: #888; margin-top: 4px; }
+  .team-actions { display: flex; gap: 6px; }
+
+  /* EDIT PANEL */
+  .edit-panel { border: 2px solid #e8f0fe; border-radius: 6px; padding: 14px; margin-top: 12px; background: #f8faff; display: none; }
+  .edit-panel.open { display: block; }
+
+  /* USER ROW */
+  .user-row { background: #fff; border-radius: 8px; padding: 14px 16px; margin-bottom: 10px; }
+  .user-row-header { display: flex; justify-content: space-between; align-items: flex-start; }
+  .user-row-info { flex: 1; }
+  .user-role-select { font-size: 0.8rem; padding: 5px 8px; border: 2px solid #e0e0e0; border-radius: 4px; font-family: inherit; cursor: pointer; background: #fff; outline: none; }
+  .user-row-meta { font-size: 0.78rem; color: #888; margin-top: 4px; }
+
+  /* LOADING */
+  #loadingMsg { text-align: center; padding: 60px 16px; color: #bbb; font-size: 0.9rem; }
+
+  /* TOAST */
+  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #222; color: #fff; padding: 10px 20px; border-radius: 24px; font-size: 0.85rem; font-weight: 600; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 999; white-space: nowrap; }
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html">
+    <img src="sdstrikelogo.svg" alt="SD Strike" style="height:40px;">
+  </a>
+  <div class="nav-right">
+    <a href="dashboard.html" class="back-link">← Dashboard</a>
+    <button class="signout-btn" id="signOutBtn">Sign Out</button>
+  </div>
+</nav>
+
+<div id="loadingMsg">Loading...</div>
+
+<div id="adminApp" style="display:none;">
+
+  <div class="page-header">
+    <h1>Admin Panel</h1>
+    <p>Manage users, teams, and requests.</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="pending">
+      Pending <span class="tab-count zero" id="pendingCount">0</span>
+    </button>
+    <button class="tab-btn" data-tab="teams">Teams</button>
+    <button class="tab-btn" data-tab="users">Users</button>
+  </div>
+
+  <!-- ── PENDING REQUESTS TAB ─────────────────────────────────────────── -->
+  <div class="tab-content active" id="pendingTab">
+    <div id="pendingList"></div>
+  </div>
+
+  <!-- ── TEAMS TAB ────────────────────────────────────────────────────── -->
+  <div class="tab-content" id="teamsTab">
+    <!-- Create Team Form -->
+    <div class="form-section">
+      <h3>Create New Team</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="newTeamName">Team Name</label>
+          <input type="text" id="newTeamName" placeholder="e.g. Boys 9th-10th">
+        </div>
+        <div class="form-group">
+          <label for="newTeamAge">Age Group</label>
+          <input type="text" id="newTeamAge" placeholder="e.g. 14-15">
+        </div>
+      </div>
+      <button class="btn btn-primary" id="createTeamBtn">Create Team</button>
+    </div>
+    <!-- Teams List -->
+    <div id="teamsList"></div>
+  </div>
+
+  <!-- ── USERS TAB ─────────────────────────────────────────────────────── -->
+  <div class="tab-content" id="usersTab">
+    <div id="usersList"></div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js';
+  import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
+  import { getFirestore, doc, getDoc, setDoc, updateDoc, addDoc, getDocs, deleteDoc,
+           collection, query, where, orderBy, serverTimestamp, deleteField }
+    from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBvbspciyWNFHljZPvKTvW47Z0dfQwSrzM",
+    authDomain: "sdstrike-4f344.firebaseapp.com",
+    projectId: "sdstrike-4f344",
+    storageBucket: "sdstrike-4f344.firebasestorage.app",
+    messagingSenderId: "828937445096",
+    appId: "1:828937445096:web:1041315fe97bde3744735d"
+  };
+
+  const app  = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db   = getFirestore(app);
+
+  let allTeams = {}; // { teamId: teamData }
+  let allUsers = []; // [{ id, ...data }]
+
+  // ── AUTH GUARD ────────────────────────────────────────────────────────────
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) { window.location.href = 'signin.html'; return; }
+    const snap = await getDoc(doc(db, 'users', user.uid));
+    if (!snap.exists() || snap.data().role !== 'admin') {
+      window.location.href = 'dashboard.html'; return;
+    }
+    await loadAll();
+    document.getElementById('loadingMsg').style.display = 'none';
+    document.getElementById('adminApp').style.display   = 'block';
+  });
+
+  document.getElementById('signOutBtn').addEventListener('click', async () => {
+    await signOut(auth);
+    window.location.href = 'signin.html';
+  });
+
+  // ── TABS ─────────────────────────────────────────────────────────────────
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab + 'Tab').classList.add('active');
+    });
+  });
+
+  // ── LOAD ALL DATA ─────────────────────────────────────────────────────────
+  async function loadAll() {
+    const [teamsSnap, usersSnap] = await Promise.all([
+      getDocs(collection(db, 'teams')),
+      getDocs(collection(db, 'users'))
+    ]);
+
+    allTeams = {};
+    teamsSnap.forEach(d => { allTeams[d.id] = { id: d.id, ...d.data() }; });
+
+    allUsers = [];
+    usersSnap.forEach(d => { allUsers.push({ id: d.id, ...d.data() }); });
+
+    renderPending();
+    renderTeams();
+    renderUsers();
+  }
+
+  // ── PENDING REQUESTS ──────────────────────────────────────────────────────
+  function renderPending() {
+    const pending = allUsers.filter(u => u.role === 'pending');
+    const count = document.getElementById('pendingCount');
+    count.textContent = pending.length;
+    count.className = 'tab-count' + (pending.length > 0 ? '' : ' zero');
+
+    const list = document.getElementById('pendingList');
+    if (pending.length === 0) {
+      list.innerHTML = `<div class="empty"><span class="icon">&#10003;</span><p>No pending requests</p></div>`;
+      return;
+    }
+
+    list.innerHTML = '';
+    pending.forEach(user => {
+      const teamName = user.requestedTeamId ? (allTeams[user.requestedTeamId]?.name || 'Unknown team') : 'No team requested';
+      const roleLabel = user.requestedRole === 'coach' ? 'Coach' : 'Player / Parent';
+      const div = document.createElement('div');
+      div.className = 'card';
+      div.innerHTML = `
+        <div class="card-header">
+          <div>
+            <div class="card-title">${esc(user.displayName || 'No name')}</div>
+            <div class="card-meta">${esc(user.email)}</div>
+            <div class="card-meta" style="margin-top:6px;">
+              Wants to be: <strong>${roleLabel}</strong><br>
+              Team: <strong>${esc(teamName)}</strong>
+            </div>
+          </div>
+          <span class="role-badge role-pending">Pending</span>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-approve" data-action="approve" data-uid="${user.id}">Approve</button>
+          <button class="btn btn-reject"  data-action="reject"  data-uid="${user.id}">Reject</button>
+        </div>`;
+      list.appendChild(div);
+    });
+
+    list.querySelectorAll('[data-action="approve"]').forEach(btn => {
+      btn.addEventListener('click', () => approveUser(btn.dataset.uid));
+    });
+    list.querySelectorAll('[data-action="reject"]').forEach(btn => {
+      btn.addEventListener('click', () => rejectUser(btn.dataset.uid));
+    });
+  }
+
+  async function approveUser(uid) {
+    const user = allUsers.find(u => u.id === uid);
+    if (!user) return;
+    const newRole = user.requestedRole || 'player';
+    const teamId  = user.requestedTeamId || null;
+    const updates = {
+      role: newRole,
+      teamId,
+      requestedRole:   deleteField(),
+      requestedTeamId: deleteField()
+    };
+    await updateDoc(doc(db, 'users', uid), updates);
+
+    // If coach + team, update the team's coach field
+    if (newRole === 'coach' && teamId) {
+      await updateDoc(doc(db, 'teams', teamId), {
+        coachId:   uid,
+        coachName: user.displayName || user.email
+      });
+    }
+    toast('Approved!');
+    await loadAll();
+  }
+
+  async function rejectUser(uid) {
+    if (!confirm('Reject this request? The user will see a rejected status.')) return;
+    await updateDoc(doc(db, 'users', uid), {
+      role: 'rejected',
+      requestedRole:   deleteField(),
+      requestedTeamId: deleteField()
+    });
+    toast('Request rejected.');
+    await loadAll();
+  }
+
+  // ── TEAMS ─────────────────────────────────────────────────────────────────
+  function renderTeams() {
+    const list = document.getElementById('teamsList');
+    const teams = Object.values(allTeams);
+
+    if (teams.length === 0) {
+      list.innerHTML = `<div class="empty"><span class="icon">&#127944;</span><p>No teams yet. Create one above.</p></div>`;
+      return;
+    }
+
+    list.innerHTML = '';
+    teams.forEach(team => {
+      const coaches = allUsers.filter(u => u.teamId === team.id && u.role === 'coach');
+      const coachLabel = coaches.length
+        ? coaches.map(c => esc(c.displayName || c.email)).join(', ')
+        : 'No coach assigned';
+
+      // Build coach options for assign dropdown
+      const eligibleCoaches = allUsers.filter(u => u.role === 'coach' || u.role === 'admin');
+      const coachOptions = eligibleCoaches.map(c =>
+        `<option value="${c.id}" ${team.coachId === c.id ? 'selected' : ''}>${esc(c.displayName || c.email)}</option>`
+      ).join('');
+
+      const div = document.createElement('div');
+      div.className = 'team-card';
+      div.innerHTML = `
+        <div class="team-card-header">
+          <div>
+            <h4>${esc(team.name)}</h4>
+            <div class="coach-info">${team.ageGroup ? 'Ages ' + esc(team.ageGroup) + ' · ' : ''}Coach: ${coachLabel}</div>
+          </div>
+          <div class="team-actions">
+            <button class="btn btn-secondary btn-sm" data-edit="${team.id}">Edit</button>
+            <button class="btn btn-danger btn-sm" data-delete="${team.id}">Delete</button>
+          </div>
+        </div>
+        <div class="edit-panel" id="edit-${team.id}">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Team Name</label>
+              <input type="text" id="editName-${team.id}" value="${esc(team.name)}">
+            </div>
+            <div class="form-group">
+              <label>Age Group</label>
+              <input type="text" id="editAge-${team.id}" value="${esc(team.ageGroup || '')}">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Assign Coach</label>
+            <select id="editCoach-${team.id}">
+              <option value="">No coach</option>
+              ${coachOptions}
+            </select>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary btn-sm" data-save="${team.id}">Save</button>
+            <button class="btn btn-secondary btn-sm" data-cancel="${team.id}">Cancel</button>
+          </div>
+        </div>`;
+      list.appendChild(div);
+    });
+
+    // Edit toggle
+    list.querySelectorAll('[data-edit]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const panel = document.getElementById('edit-' + btn.dataset.edit);
+        panel.classList.toggle('open');
+      });
+    });
+
+    // Cancel edit
+    list.querySelectorAll('[data-cancel]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.getElementById('edit-' + btn.dataset.cancel).classList.remove('open');
+      });
+    });
+
+    // Save edit
+    list.querySelectorAll('[data-save]').forEach(btn => {
+      btn.addEventListener('click', () => saveTeam(btn.dataset.save));
+    });
+
+    // Delete
+    list.querySelectorAll('[data-delete]').forEach(btn => {
+      btn.addEventListener('click', () => deleteTeam(btn.dataset.delete));
+    });
+  }
+
+  async function saveTeam(teamId) {
+    const name     = document.getElementById('editName-' + teamId).value.trim();
+    const ageGroup = document.getElementById('editAge-' + teamId).value.trim();
+    const coachId  = document.getElementById('editCoach-' + teamId).value;
+    if (!name) { alert('Team name is required.'); return; }
+
+    const oldTeam  = allTeams[teamId];
+    const oldCoachId = oldTeam.coachId || null;
+    const coach    = coachId ? allUsers.find(u => u.id === coachId) : null;
+
+    await updateDoc(doc(db, 'teams', teamId), {
+      name, ageGroup,
+      coachId:   coachId || null,
+      coachName: coach ? (coach.displayName || coach.email) : null
+    });
+
+    // Update old coach's teamId if changed
+    if (oldCoachId && oldCoachId !== coachId) {
+      await updateDoc(doc(db, 'users', oldCoachId), { teamId: null });
+    }
+    // Update new coach's teamId
+    if (coachId) {
+      await updateDoc(doc(db, 'users', coachId), { teamId, role: 'coach' });
+    }
+    toast('Team saved!');
+    await loadAll();
+  }
+
+  async function deleteTeam(teamId) {
+    if (!confirm('Delete this team? This will unassign all members.')) return;
+    // Unassign all users on this team
+    const members = allUsers.filter(u => u.teamId === teamId);
+    await Promise.all(members.map(u => updateDoc(doc(db, 'users', u.id), { teamId: null })));
+    await deleteDoc(doc(db, 'teams', teamId));
+    toast('Team deleted.');
+    await loadAll();
+  }
+
+  // Create team
+  document.getElementById('createTeamBtn').addEventListener('click', async () => {
+    const name     = document.getElementById('newTeamName').value.trim();
+    const ageGroup = document.getElementById('newTeamAge').value.trim();
+    if (!name) { alert('Enter a team name.'); return; }
+    await addDoc(collection(db, 'teams'), {
+      name, ageGroup,
+      coachId: null, coachName: null,
+      createdAt: serverTimestamp()
+    });
+    document.getElementById('newTeamName').value = '';
+    document.getElementById('newTeamAge').value  = '';
+    toast('Team created!');
+    await loadAll();
+  });
+
+  // ── USERS ─────────────────────────────────────────────────────────────────
+  function renderUsers() {
+    const list = document.getElementById('usersList');
+    if (allUsers.length === 0) {
+      list.innerHTML = `<div class="empty"><span class="icon">&#128100;</span><p>No users yet.</p></div>`;
+      return;
+    }
+
+    list.innerHTML = '';
+    const sorted = [...allUsers].sort((a, b) => (a.displayName || '').localeCompare(b.displayName || ''));
+    sorted.forEach(user => {
+      const teamName = user.teamId ? (allTeams[user.teamId]?.name || 'Unknown') : '—';
+      const teamOptions = Object.values(allTeams).map(t =>
+        `<option value="${t.id}" ${user.teamId === t.id ? 'selected' : ''}>${esc(t.name)}</option>`
+      ).join('');
+
+      const div = document.createElement('div');
+      div.className = 'user-row';
+      div.innerHTML = `
+        <div class="user-row-header">
+          <div class="user-row-info">
+            <div style="font-size:0.93rem;font-weight:700;">${esc(user.displayName || 'No name')}</div>
+            <div class="user-row-meta">${esc(user.email)}</div>
+            <div class="user-row-meta" style="margin-top:4px;">Team: ${esc(teamName)}</div>
+          </div>
+          <span class="role-badge role-${user.role}">${user.role}</span>
+        </div>
+        <div class="btn-row" style="margin-top:12px;">
+          <select class="user-role-select" data-uid="${user.id}">
+            <option value="pending"  ${user.role==='pending'  ? 'selected':''}>Pending</option>
+            <option value="player"   ${user.role==='player'   ? 'selected':''}>Player</option>
+            <option value="coach"    ${user.role==='coach'    ? 'selected':''}>Coach</option>
+            <option value="admin"    ${user.role==='admin'    ? 'selected':''}>Admin</option>
+            <option value="rejected" ${user.role==='rejected' ? 'selected':''}>Rejected</option>
+          </select>
+          <select class="user-role-select" data-team-uid="${user.id}" style="flex:1;">
+            <option value="">No team</option>
+            ${teamOptions}
+          </select>
+          <button class="btn btn-primary btn-sm" data-save-user="${user.id}">Save</button>
+        </div>`;
+      list.appendChild(div);
+    });
+
+    list.querySelectorAll('[data-save-user]').forEach(btn => {
+      btn.addEventListener('click', () => saveUser(btn.dataset.saveUser));
+    });
+  }
+
+  async function saveUser(uid) {
+    const roleEl = document.querySelector(`[data-uid="${uid}"]`);
+    const teamEl = document.querySelector(`[data-team-uid="${uid}"]`);
+    const newRole = roleEl.value;
+    const newTeam = teamEl.value || null;
+    await updateDoc(doc(db, 'users', uid), { role: newRole, teamId: newTeam });
+    // If assigned as coach to a team, update team's coachId
+    if (newRole === 'coach' && newTeam) {
+      const user = allUsers.find(u => u.id === uid);
+      await updateDoc(doc(db, 'teams', newTeam), {
+        coachId: uid,
+        coachName: user?.displayName || user?.email || ''
+      });
+    }
+    toast('User updated!');
+    await loadAll();
+  }
+
+  // ── HELPERS ───────────────────────────────────────────────────────────────
+  function esc(str) {
+    if (!str) return '';
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function toast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 2500);
+  }
+</script>
+
+</body>
+</html>

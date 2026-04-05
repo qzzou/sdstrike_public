@@ -4,9 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SDStrike Basketball</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #222; background: #fff; margin: 0 auto; }
+  body { font-family: 'Barlow', sans-serif; color: #222; background: #fff; margin: 0 auto; }
 
   /* TOP BAR */
   .topbar { background: #1a3f7a; color: #fff; text-align: center; padding: 10px 16px; font-size: 0.8rem; font-weight: 600; }
@@ -26,12 +29,20 @@
   .menu-btn.open span:nth-child(2) { opacity: 0; }
   .menu-btn.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
 
-  /* DROPDOWN MENU */
-  .menu-dropdown { display: none; border-bottom: 3px solid #1a3f7a; background: #fff; }
-  .menu-dropdown.open { display: block; }
-  .menu-dropdown a { display: flex; align-items: center; gap: 10px; padding: 16px 20px; color: #1a3f7a; text-decoration: none; font-weight: 700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #f0f0f0; }
+  /* SLIDE-OUT DRAWER */
+  .menu-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 200; }
+  .menu-overlay.open { display: block; }
+  .menu-dropdown { position: fixed; top: 0; left: 0; height: 100%; width: 75%; max-width: 280px; background: #fff; z-index: 201; transform: translateX(-100%); transition: transform 0.28s ease; box-shadow: 4px 0 20px rgba(0,0,0,0.15); display: flex; flex-direction: column; }
+  .menu-dropdown.open { transform: translateX(0); }
+  .menu-dropdown-header { background: #1a3f7a; padding: 20px 20px 16px; display: flex; align-items: center; justify-content: space-between; }
+  .menu-dropdown-header img { height: 32px; }
+  .menu-close { background: none; border: none; cursor: pointer; color: #fff; font-size: 1.4rem; line-height: 1; padding: 0; }
+  .menu-dropdown nav-section { display: block; padding: 8px 0; }
+  .menu-dropdown a { display: flex; align-items: center; gap: 12px; padding: 15px 20px; color: #222; text-decoration: none; font-weight: 600; font-size: 0.92rem; text-transform: uppercase; letter-spacing: 0.8px; border-bottom: 1px solid #f0f0f0; }
   .menu-dropdown a:last-child { border-bottom: none; }
   .menu-dropdown a:active { background: #f4f7ff; }
+  .menu-dropdown a .icon { width: 20px; height: 20px; flex-shrink: 0; color: #bbb; }
+  .menu-dropdown a .icon-img { width: 20px; height: 20px; flex-shrink: 0; filter: brightness(0) invert(1) brightness(0.73); }
 
   /* HERO */
   .hero { background: #222; color: #fff; padding: 40px 20px 36px; text-align: center; position: relative; overflow: hidden; }
@@ -199,8 +210,51 @@
     <div class="logo"><img src="sdstrikelogo.svg" alt="SD Strike"></div>
     <a href="https://docs.google.com/forms/d/e/1FAIpQLSfK__71O7koZuayCxLPjM4MMpA4Gy1IkX4Kkn_29KgoKGZwSg/viewform" class="nav-link" target="_blank">Sign Up</a>
   </nav>
+  <div class="menu-overlay" id="menuOverlay"></div>
   <div class="menu-dropdown" id="menuDropdown">
-    <a href="signin.html">&#128274; Log In</a>
+    <div class="menu-dropdown-header">
+      <img src="sdstrikelogo.svg" alt="SD Strike">
+      <button class="menu-close" id="menuClose" aria-label="Close menu">&#x2715;</button>
+    </div>
+    <a href="#programs">
+      <svg class="icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5,3 h10 v5 c0,4 -3,6 -5,7 c-2,-1 -5,-3 -5,-7 z"/>
+        <path d="M5,5 C3,5 1,6 1,8.5 C1,11 3,12 5,11"/>
+        <path d="M15,5 C17,5 19,6 19,8.5 C19,11 17,12 15,11"/>
+        <line x1="10" y1="15" x2="10" y2="17"/>
+        <line x1="6" y1="17" x2="14" y2="17"/>
+      </svg>
+      Programs
+    </a>
+    <a href="coaches.html">
+      <svg class="icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="7" cy="6" r="3"/>
+        <path d="M1,17 C1,13 4,11 7,11 C10,11 13,13 13,17"/>
+        <circle cx="14" cy="7" r="2.5"/>
+        <path d="M13,17 C13,13.5 14.5,12 16,11.5 C17.5,11 19,12 19,15"/>
+      </svg>
+      Coaches
+    </a>
+    <a href="#about">
+      <svg class="icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="12,2 7,11 10.5,11 8,18 13,9 9.5,9"/>
+      </svg>
+      Our Mission
+    </a>
+    <a href="#contact">
+      <svg class="icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="5" width="16" height="11" rx="1.5"/>
+        <polyline points="2,5 10,12 18,5"/>
+      </svg>
+      Contact Us
+    </a>
+    <a href="signin.html">
+      <svg class="icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="5" y="9" width="10" height="8" rx="1.5"/>
+        <path d="M7 9V6a3 3 0 0 1 6 0v3"/>
+      </svg>
+      Log In
+    </a>
   </div>
 </div>
 
@@ -342,17 +396,29 @@
 
   const menuBtn = document.getElementById('menuBtn');
   const menuDropdown = document.getElementById('menuDropdown');
-  menuBtn.addEventListener('click', () => {
-    const isOpen = menuDropdown.classList.toggle('open');
-    menuBtn.classList.toggle('open', isOpen);
-    menuBtn.setAttribute('aria-expanded', isOpen);
-  });
-  document.addEventListener('click', (e) => {
-    if (!menuBtn.contains(e.target) && !menuDropdown.contains(e.target)) {
-      menuDropdown.classList.remove('open');
-      menuBtn.classList.remove('open');
-      menuBtn.setAttribute('aria-expanded', false);
-    }
+  const menuOverlay = document.getElementById('menuOverlay');
+  const menuClose = document.getElementById('menuClose');
+
+  function openMenu() {
+    menuDropdown.classList.add('open');
+    menuOverlay.classList.add('open');
+    menuBtn.classList.add('open');
+    menuBtn.setAttribute('aria-expanded', true);
+  }
+  function closeMenu() {
+    menuDropdown.classList.remove('open');
+    menuOverlay.classList.remove('open');
+    menuBtn.classList.remove('open');
+    menuBtn.setAttribute('aria-expanded', false);
+  }
+
+  menuBtn.addEventListener('click', () => menuDropdown.classList.contains('open') ? closeMenu() : openMenu());
+  menuClose.addEventListener('click', closeMenu);
+  menuOverlay.addEventListener('click', closeMenu);
+
+  // Close when an anchor link is clicked
+  menuDropdown.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener('click', closeMenu);
   });
 </script>
 </body>
