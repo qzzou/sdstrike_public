@@ -3,222 +3,296 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My Dashboard — SDStrike Basketball</title>
+<title>SDStrike — Get Started</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'Barlow', sans-serif; color: #222; background: #f8f8f8; max-width: 480px; margin: 0 auto; min-height: 100vh; }
-
-  nav { display: flex; justify-content: space-between; align-items: center; padding: 2px 16px 6px; background: #fff; border-bottom: 3px solid #1a3f7a; position: sticky; top: 0; z-index: 100; }
-  nav .logo img { height: 40px; display: block; }
-  .signout-btn { background: none; border: none; color: #1a3f7a; font-weight: 700; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; font-family: inherit; }
-
-  .dashboard-wrap { padding: 28px 16px 48px; }
-  .welcome { background: #1a3f7a; color: #fff; border-radius: 8px; padding: 20px; margin-bottom: 24px; }
+  body { max-width: 480px; margin: 0 auto; }
+  .welcome { background: #1a3f7a; color: #fff; border-radius: 10px; padding: 20px; margin: 20px 16px; }
   .welcome .label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; color: #5a9cf5; margin-bottom: 4px; }
-  .welcome h2 { font-size: 1.3rem; font-weight: 900; }
-  .welcome .team { font-size: 0.85rem; color: #aac4f5; margin-top: 4px; }
-  .welcome .role-badge { display: inline-block; margin-top: 10px; padding: 3px 10px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; background: rgba(255,255,255,0.15); color: #fff; }
+  .welcome h2 { font-size: 1.3rem; font-weight: 900; margin: 0; }
 
-  .pending-box { border: 2px solid #f0b429; border-radius: 8px; padding: 20px; text-align: center; background: #fffbf0; margin-bottom: 16px; }
-  .pending-box .icon { font-size: 2rem; display: block; margin-bottom: 10px; }
-  .pending-box h3 { font-size: 1rem; font-weight: 800; color: #b7860a; margin-bottom: 6px; }
-  .pending-box p { font-size: 0.85rem; color: #888; line-height: 1.5; }
+  .step { margin: 0 16px 16px; }
+  .step[hidden] { display: none; }
 
-  .section { background: #fff; border-radius: 8px; padding: 20px; margin-bottom: 16px; }
-  .section h3 { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: #888; margin-bottom: 16px; }
+  .role-picker { display: flex; flex-direction: column; gap: 10px; }
+  .role-option { display: flex; align-items: center; gap: 14px; padding: 18px 16px; background: #fff; border: 2px solid #e0e0e0; border-radius: 10px; cursor: pointer; transition: border-color 0.2s; }
+  .role-option:hover { border-color: #1a3f7a; }
+  .role-option.selected { border-color: #1a3f7a; background: #f0f4ff; }
+  .role-option .role-icon { font-size: 1.8rem; min-width: 40px; text-align: center; }
+  .role-option .role-label { font-weight: 800; font-size: 1rem; }
+  .role-option .role-desc { font-size: 0.82rem; color: #666; margin-top: 2px; line-height: 1.4; }
 
-  .coming-soon { text-align: center; padding: 24px 0 8px; color: #bbb; font-size: 0.9rem; }
-  .coming-soon .icon { font-size: 2rem; display: block; margin-bottom: 8px; }
+  .status-box { border-radius: 10px; padding: 24px; text-align: center; background: #fff; border: 1px solid #e0e0e0; }
+  .status-box .icon { font-size: 2rem; display: block; margin-bottom: 10px; }
+  .status-box h3 { font-size: 1rem; font-weight: 800; margin-bottom: 6px; color: #1a3f7a; }
+  .status-box p { font-size: 0.85rem; line-height: 1.5; color: #555; }
+  .status-box.warn { border-color: #f0b429; background: #fffbf0; }
+  .status-box.warn h3 { color: #b7860a; }
+  .status-box.error { border-color: #c0392b; background: #fdecea; }
+  .status-box.error h3 { color: #c0392b; }
+  .status-box.success { border-color: #27ae60; background: #e6f7ed; }
+  .status-box.success h3 { color: #1e7e34; }
 </style>
 </head>
 <body>
 
-<nav>
-  <a href="index.html">
-    <img src="sdstrikelogo.svg" alt="SD Strike" style="height:40px;">
-  </a>
-  <button class="signout-btn" id="signOutBtn">Sign Out</button>
+<nav class="portal-nav" data-testid="nav">
+  <a href="index.html"><img src="sdstrikelogo.svg" class="logo" alt="SDStrike" style="height:40px"></a>
+  <span class="nav-spacer"></span>
+  <span class="nav-user" data-testid="nav-user"></span>
+  <button class="signout" data-testid="signout">Sign out</button>
 </nav>
 
-<div class="dashboard-wrap">
+<div class="welcome" data-testid="welcome">
+  <div class="label">Signed in as</div>
+  <h2 data-testid="user-name">Loading…</h2>
+</div>
 
-  <div class="welcome">
-    <div class="label">Welcome back</div>
-    <h2 id="userName">Loading...</h2>
-    <div class="team" id="teamName"></div>
-    <span class="role-badge" id="roleBadge" style="display:none;"></span>
+<!-- STEP 1: Choose your role -->
+<div class="step" data-testid="step-role" hidden>
+  <div class="card">
+    <h2>Who are you?</h2>
+    <p class="hint" style="margin-bottom:14px;">Choose your role to get started.</p>
+    <div class="role-picker" data-testid="role-picker">
+      <div class="role-option" data-role="coach" data-testid="role-coach">
+        <div class="role-icon">&#127947;</div>
+        <div>
+          <div class="role-label">Coach</div>
+          <div class="role-desc">Manage your team's schedule, roster, and game clips.</div>
+        </div>
+      </div>
+      <div class="role-option" data-role="player" data-testid="role-player">
+        <div class="role-icon">&#9917;</div>
+        <div>
+          <div class="role-label">Player</div>
+          <div class="role-desc">Join your team with a code from your coach.</div>
+        </div>
+      </div>
+      <div class="role-option" data-role="parent" data-testid="role-parent">
+        <div class="role-icon">&#128106;</div>
+        <div>
+          <div class="role-label">Parent</div>
+          <div class="role-desc">Follow your child's team schedule and updates.</div>
+        </div>
+      </div>
+    </div>
   </div>
+</div>
 
-  <div class="pending-box" id="pendingBox" style="display:none;">
+<!-- STEP 2a-1: Coach — approved but no team yet -->
+<div class="step" data-testid="step-coach-approved" hidden>
+  <div class="status-box success">
+    <span class="icon">&#10004;</span>
+    <h3>You're Approved!</h3>
+    <p>The admin is assigning you to a team. Once assigned, your coach dashboard will be ready.</p>
+    <p style="margin-top:10px;font-size:0.8rem;color:#999;">Refresh this page to check your status.</p>
+  </div>
+</div>
+
+<!-- STEP 2a-2: Coach — request sent, waiting for approval -->
+<div class="step" data-testid="step-coach-pending" hidden>
+  <div class="status-box warn">
     <span class="icon">&#9203;</span>
-    <h3>Awaiting Approval</h3>
-    <p>Your account is pending review. The admin will approve your request shortly. Check back soon!</p>
+    <h3>Coach Request Sent</h3>
+    <p>The admin has been notified. Once approved, you'll receive your team dashboard and can generate an invite code for your players.</p>
+    <p style="margin-top:10px;font-size:0.8rem;color:#999;">Refresh this page to check your status.</p>
   </div>
+</div>
 
-  <div class="section">
-    <h3>Practice &amp; Game Schedule</h3>
-    <div class="coming-soon">
-      <span class="icon">&#128197;</span>
-      Schedule coming soon
+<!-- STEP 2b: Player/Parent — enter team code -->
+<div class="step" data-testid="step-join" hidden>
+  <div class="card">
+    <h2 data-testid="join-title">Join your team</h2>
+    <p class="hint" data-testid="join-hint">Enter the team code your coach gave you.</p>
+
+    <div class="inline-msg error" data-testid="join-error" hidden></div>
+    <div class="inline-msg success" data-testid="join-success" hidden></div>
+
+    <div class="form-row">
+      <label for="join-code">Team code</label>
+      <input type="text" id="join-code" data-testid="join-code" autocapitalize="characters" autocomplete="off" placeholder="e.g. STRK24" style="font-size:1.2rem;letter-spacing:2px;text-align:center;">
     </div>
-  </div>
 
-  <div class="section">
-    <h3>Payment Notices</h3>
-    <div class="coming-soon">
-      <span class="icon">&#128179;</span>
-      Payment info coming soon
-    </div>
+    <button class="btn" data-testid="join-submit" style="width:100%;margin-top:8px;">Join team</button>
   </div>
+</div>
 
+<!-- Rejected state -->
+<div class="step" data-testid="step-rejected" hidden>
+  <div class="status-box error">
+    <span class="icon">&#10060;</span>
+    <h3>Request Declined</h3>
+    <p>Your coach request was not approved. Contact the admin if this is a mistake.</p>
+  </div>
 </div>
 
 <script type="module">
-  import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js';
-  import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
-  import { getFirestore, doc, getDoc } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
+import {
+  onAuthReady, signOut, updateUser, findTeamByInviteCode, getUser,
+} from './shared.js';
 
-  // ── PASTE YOUR SAME FIREBASE CONFIG HERE ─────────────────────────────────
-  const firebaseConfig = {
-    apiKey: "AIzaSyBvbspciyWNFHljZPvKTvW47Z0dfQwSrzM",
-    authDomain: "sdstrike-4f344.firebaseapp.com",
-    projectId: "sdstrike-4f344",
-    storageBucket: "sdstrike-4f344.firebasestorage.app",
-    messagingSenderId: "828937445096",
-    appId: "1:828937445096:web:1041315fe97bde3744735d"
-  };
-  // ─────────────────────────────────────────────────────────────────────────
+const TESTMODE = new URLSearchParams(location.search).get('testmode') === '1';
+const qs = TESTMODE ? '?testmode=1' : '';
 
-  const app  = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db   = getFirestore(app);
+const nameEl = document.querySelector('[data-testid="user-name"]');
+const navUserEl = document.querySelector('[data-testid="nav-user"]');
 
-  // Redirect to sign-in if not logged in, otherwise load dashboard
-  onAuthStateChanged(auth, async (user) => {
-    if (!user) {
-      window.location.href = 'signin.html';
-      return;
-    }
+const stepRole = document.querySelector('[data-testid="step-role"]');
+const stepCoachApproved = document.querySelector('[data-testid="step-coach-approved"]');
+const stepCoachPending = document.querySelector('[data-testid="step-coach-pending"]');
+const stepJoin = document.querySelector('[data-testid="step-join"]');
+const stepRejected = document.querySelector('[data-testid="step-rejected"]');
 
-    // Fill name from Auth
-    document.getElementById('userName').textContent = user.displayName || user.email;
+const joinError = document.querySelector('[data-testid="join-error"]');
+const joinSuccess = document.querySelector('[data-testid="join-success"]');
+const joinTitle = document.querySelector('[data-testid="join-title"]');
+const joinHint = document.querySelector('[data-testid="join-hint"]');
 
-    // Read user role from Firestore
-    let userData = null;
-    let role = 'pending';
-    try {
-      const userSnap = await getDoc(doc(db, 'users', user.uid));
-      userData = userSnap.exists() ? userSnap.data() : null;
-      role = userData?.role || 'pending';
-    } catch (err) {
-      console.error('Firestore read failed:', err);
-    }
+let currentUser = null;
 
-    // Show role badge
-    const roleLabels = { admin: 'Admin', coach: 'Coach', player: 'Player', pending: 'Pending' };
-    const badge = document.getElementById('roleBadge');
-    badge.textContent = roleLabels[role] || role;
-    badge.style.display = 'inline-block';
+onAuthReady(async (user) => {
+  if (!user) {
+    window.location.href = 'signin.html' + qs;
+    return;
+  }
+  currentUser = user;
+  nameEl.textContent = user.displayName || user.email || '';
+  navUserEl.textContent = user.displayName || user.email || '';
 
-    // Show team name if assigned
-    if (userData?.teamId) {
+  const role = user.role || 'pending';
+  const chosenRole = user.chosenRole || '';
+  const memberships = user.teamMemberships || {};
+  const hasTeam = Object.keys(memberships).length > 0;
+
+  // Admin → admin panel
+  if (role === 'admin') {
+    window.location.href = 'admin.html' + qs;
+    return;
+  }
+
+  // Has a team → portal
+  if (hasTeam) {
+    window.location.href = 'portal.html' + qs;
+    return;
+  }
+
+  // Approved coach but no team yet → waiting for admin to assign
+  if (role === 'coach' && !hasTeam) {
+    stepCoachApproved.hidden = false;
+    document.body.dataset.ready = '1';
+    return;
+  }
+
+  // Rejected
+  if (role === 'rejected') {
+    stepRejected.hidden = false;
+    document.body.dataset.ready = '1';
+    return;
+  }
+
+  // Coach request submitted, waiting for admin approval
+  if (chosenRole === 'coach' && role === 'pending') {
+    stepCoachPending.hidden = false;
+    document.body.dataset.ready = '1';
+    return;
+  }
+
+  // Player/parent chose role but hasn't entered code yet
+  if (chosenRole === 'player' || chosenRole === 'parent') {
+    showJoinStep(chosenRole);
+    document.body.dataset.ready = '1';
+    return;
+  }
+
+  // New user — show role picker
+  stepRole.hidden = false;
+  document.body.dataset.ready = '1';
+});
+
+// Role selection
+document.querySelectorAll('.role-option').forEach(el => {
+  el.addEventListener('click', async () => {
+    const chosen = el.dataset.role;
+
+    // Highlight selection briefly
+    document.querySelectorAll('.role-option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+
+    if (chosen === 'coach') {
+      // Save chosen role and show pending state
       try {
-        const teamSnap = await getDoc(doc(db, 'teams', userData.teamId));
-        if (teamSnap.exists()) {
-          document.getElementById('teamName').textContent = teamSnap.data().name;
-        }
-      } catch (_) {}
-    } else if (role === 'pending' && userData?.requestedRole) {
-      document.getElementById('teamName').textContent = `Requested: ${userData.requestedRole}`;
+        await updateUser(currentUser.uid, { chosenRole: 'coach', requestedRole: 'coach' });
+        currentUser.chosenRole = 'coach';
+        stepRole.hidden = true;
+        stepCoachPending.hidden = false;
+      } catch (err) {
+        alert('Failed to send request: ' + (err?.message || err));
+      }
+    } else {
+      // Player or parent — save chosen role and show code input
+      try {
+        await updateUser(currentUser.uid, { chosenRole: chosen });
+        currentUser.chosenRole = chosen;
+        stepRole.hidden = true;
+        showJoinStep(chosen);
+      } catch (err) {
+        alert('Failed to save: ' + (err?.message || err));
+      }
     }
-
-    // Redirect to role-specific pages
-    if (role === 'admin') {
-      window.location.href = 'admin.html';
-      return;
-    } else if (role === 'coach') {
-      window.location.href = 'coach.html';
-      return;
-    } else if (role === 'player') {
-      window.location.href = 'player.html';
-      return;
-    }
-
-    // Only pending/rejected users land here
-    document.getElementById('pendingBox').style.display = 'block';
-    document.getElementById('loadingMsg').style.display = 'none';
-    document.getElementById('dashWrap').style.display = 'block';
-  }
-
-  async function loadSchedule(teamId) {
-    if (!teamId) return;
-    try {
-      const q = query(
-        collection(db, 'teams', teamId, 'schedule'),
-        orderBy('date')
-      );
-      const snap = await getDocs(q);
-      if (snap.empty) return;
-      const list = document.getElementById('scheduleList');
-      list.innerHTML = '';
-      snap.forEach(d => {
-        const ev = d.data();
-        const isGame = ev.type === 'game';
-        list.innerHTML += `
-          <div class="schedule-item">
-            <div class="schedule-badge ${isGame ? 'badge-game' : 'badge-practice'}">${isGame ? 'Game' : 'Practice'}</div>
-            <div class="schedule-info">
-              <div class="date">${formatDate(ev.date)}</div>
-              <div class="detail">${ev.time}${isGame && ev.opponent ? ' · vs ' + ev.opponent : ''}</div>
-              <div class="loc">${ev.location || ''}</div>
-            </div>
-          </div>`;
-      });
-    } catch (_) { /* no schedule yet */ }
-  }
-
-  async function loadPayments(uid) {
-    try {
-      const q = query(collection(db, 'payments'), where('userId', '==', uid));
-      const snap = await getDocs(q);
-      if (snap.empty) return;
-      const list = document.getElementById('paymentList');
-      list.innerHTML = '';
-      snap.forEach(d => {
-        const p = d.data();
-        const paid = p.status === 'paid';
-        list.innerHTML += `
-          <div class="payment-item">
-            <div>
-              <div class="payment-desc">${p.description}</div>
-              <div class="payment-due">Due ${formatDate(p.dueDate)}</div>
-            </div>
-            <div>
-              <div class="payment-amount">$${p.amount}</div>
-              <div class="${paid ? 'status-paid' : 'status-unpaid'}">${paid ? 'Paid' : 'Unpaid'}</div>
-            </div>
-          </div>`;
-      });
-    } catch (_) { /* no payments yet */ }
-  }
-
-  function formatDate(dateStr) {
-    if (!dateStr) return '';
-    const d = new Date(dateStr + 'T00:00:00');
-    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', weekday: 'short' });
-  }
-
-  function roleBadgeLabel(role) {
-    return { admin: 'Admin', coach: 'Coach', player: 'Player', pending: 'Pending' }[role] || role;
-  }
-
-  document.getElementById('signOutBtn').addEventListener('click', async () => {
-    await signOut(auth);
-    window.location.href = 'signin.html';
   });
+});
+
+function showJoinStep(memberType) {
+  const label = memberType === 'parent' ? 'Parent' : 'Player';
+  joinTitle.textContent = `Join your team as ${label}`;
+  joinHint.textContent = 'Ask your coach for the team invite code and enter it below.';
+  stepJoin.hidden = false;
+}
+
+// Join team via code
+document.querySelector('[data-testid="join-submit"]').addEventListener('click', async () => {
+  joinError.hidden = true;
+  joinSuccess.hidden = true;
+
+  const code = document.querySelector('[data-testid="join-code"]').value.trim().toUpperCase();
+  if (!code) {
+    joinError.textContent = 'Enter an invite code.';
+    joinError.hidden = false;
+    return;
+  }
+
+  const team = await findTeamByInviteCode(code);
+  if (!team) {
+    joinError.textContent = 'Invalid or expired invite code. Check with your coach.';
+    joinError.hidden = false;
+    return;
+  }
+
+  const memberType = currentUser.chosenRole || 'player';
+  const newRole = memberType === 'parent' ? 'parent' : 'player';
+  const memberships = { ...(currentUser.teamMemberships || {}), [team.id]: memberType };
+
+  await updateUser(currentUser.uid, {
+    role: newRole,
+    teamMemberships: memberships,
+  });
+
+  joinSuccess.textContent = `You've joined ${team.name}! Redirecting...`;
+  joinSuccess.hidden = false;
+
+  setTimeout(() => {
+    window.location.href = 'portal.html' + qs;
+  }, 1200);
+});
+
+// Sign out
+document.querySelector('[data-testid="signout"]').addEventListener('click', async () => {
+  await signOut();
+  window.location.href = 'signin.html' + qs;
+});
 </script>
 
 </body>

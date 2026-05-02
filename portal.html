@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SDStrike — My Teams</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared.css">
+</head>
+<body>
+
+<nav class="portal-nav" data-testid="nav">
+  <img src="sdstrikelogo.svg" class="logo" alt="SDStrike" onerror="this.style.display='none'">
+  <span class="nav-title">SDStrike Portal</span>
+  <span class="nav-spacer"></span>
+  <span class="nav-user" data-testid="nav-user"></span>
+  <button class="signout" data-testid="signout">Sign out</button>
+</nav>
+
+<main class="portal-main">
+
+  <div class="card" data-testid="teams-card">
+    <h2>My Teams</h2>
+    <div data-testid="teams-empty" class="empty" hidden>
+      You haven't joined any teams yet. Ask your coach for an invite code.
+    </div>
+    <div class="team-list" data-testid="team-list"></div>
+  </div>
+
+  <div class="card" data-testid="join-card">
+    <h2>Join a team</h2>
+    <p class="hint">Enter the invite code your coach gave you.</p>
+
+    <div class="inline-msg error" data-testid="join-error" hidden></div>
+    <div class="inline-msg success" data-testid="join-success" hidden></div>
+
+    <div class="form-row">
+      <label for="join-code">Invite code</label>
+      <input type="text" id="join-code" data-testid="join-code" autocapitalize="characters" autocomplete="off" placeholder="e.g. STRK24">
+    </div>
+
+    <div class="form-row">
+      <label>I am a...</label>
+      <div class="radio-group">
+        <label><input type="radio" name="membership" value="player" data-testid="membership-player" checked> Player</label>
+        <label><input type="radio" name="membership" value="parent" data-testid="membership-parent"> Parent</label>
+      </div>
+    </div>
+
+    <button class="btn" data-testid="join-submit">Join team</button>
+  </div>
+
+</main>
+
+<script type="module">
+import {
+  onAuthReady, signOut, getUser, updateUser, findTeamByInviteCode, getTeam, listMessages,
+  formatRelative,
+} from './shared.js';
+
+const TESTMODE = new URLSearchParams(location.search).get('testmode') === '1';
+const qs = TESTMODE ? '?testmode=1' : '';
+
+const listEl = document.querySelector('[data-testid="team-list"]');
+const emptyEl = document.querySelector('[data-testid="teams-empty"]');
+const navUserEl = document.querySelector('[data-testid="nav-user"]');
+const errEl = document.querySelector('[data-testid="join-error"]');
+const okEl = document.querySelector('[data-testid="join-success"]');
+
+let currentUser = null;
+
+onAuthReady(async (user) => {
+  if (!user) {
+    window.location.href = 'signin.html' + qs;
+    return;
+  }
+  currentUser = user;
+  navUserEl.textContent = user.displayName || user.email || '';
+  await renderTeams();
+  // Signal to tests that page is ready.
+  document.body.dataset.ready = '1';
+});
+
+async function renderTeams() {
+  const memberships = currentUser.teamMemberships || {};
+  const teamIds = Object.keys(memberships);
+  listEl.innerHTML = '';
+  if (teamIds.length === 0) {
+    emptyEl.hidden = false;
+    return;
+  }
+  emptyEl.hidden = true;
+  for (const teamId of teamIds) {
+    const team = await getTeam(teamId);
+    if (!team) continue;
+    const messages = await listMessages(teamId);
+    const latest = messages[0];
+    const mtype = memberships[teamId];
+    const a = document.createElement('a');
+    a.href = `team.html?id=${encodeURIComponent(teamId)}${TESTMODE ? '&testmode=1' : ''}`;
+    a.className = 'team-item';
+    a.dataset.testid = 'team-item';
+    a.dataset.teamId = teamId;
+    a.innerHTML = `
+      <div class="team-name">${escapeHtml(team.name || '(unnamed)')}</div>
+      <div class="team-meta">
+        ${escapeHtml(team.ageGroup || '')} · <span class="badge ${mtype}">${mtype}</span>
+        ${latest ? ` · latest: "${escapeHtml(truncate(latest.body, 50))}" (${formatRelative(latest.createdAt)})` : ''}
+      </div>`;
+    listEl.appendChild(a);
+  }
+}
+
+document.querySelector('[data-testid="signout"]').addEventListener('click', async () => {
+  await signOut();
+  window.location.href = 'signin.html' + qs;
+});
+
+document.querySelector('[data-testid="join-submit"]').addEventListener('click', async () => {
+  errEl.hidden = true;
+  okEl.hidden = true;
+  const codeRaw = document.querySelector('[data-testid="join-code"]').value.trim().toUpperCase();
+  if (!codeRaw) {
+    errEl.textContent = 'Enter an invite code.';
+    errEl.hidden = false;
+    return;
+  }
+  const membershipType = document.querySelector('input[name="membership"]:checked').value;
+  const team = await findTeamByInviteCode(codeRaw);
+  if (!team) {
+    errEl.textContent = 'Invalid or expired invite code.';
+    errEl.hidden = false;
+    return;
+  }
+  const existing = currentUser.teamMemberships || {};
+  if (existing[team.id]) {
+    errEl.textContent = `You're already on ${team.name}.`;
+    errEl.hidden = false;
+    return;
+  }
+  const newMemberships = { ...existing, [team.id]: membershipType };
+  await updateUser(currentUser.uid, { teamMemberships: newMemberships });
+  currentUser.teamMemberships = newMemberships;
+  okEl.textContent = `Joined ${team.name} as ${membershipType}.`;
+  okEl.hidden = false;
+  document.querySelector('[data-testid="join-code"]').value = '';
+  await renderTeams();
+});
+
+function escapeHtml(s) {
+  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+function truncate(s, n) {
+  s = String(s || '');
+  return s.length > n ? s.slice(0, n - 1) + '…' : s;
+}
+</script>
+
+</body>
+</html>

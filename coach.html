@@ -1,0 +1,740 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SDStrike — Coach</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shared.css">
+  <style>
+    body { max-width: 600px; margin: 0 auto; }
+
+    .team-header { background: #1a3f7a; padding: 16px; }
+    .team-header .team-name { font-size: 20px; font-weight: 900; color: #fff; }
+    .team-header .team-meta { font-size: 12px; color: #aac4f5; margin-top: 4px; }
+    .team-header .header-row { display: flex; justify-content: space-between; align-items: center; }
+    .signout-sm { font-size: 11px; color: #fff; font-weight: 700; background: none; border: 1px solid rgba(255,255,255,0.3); padding: 4px 10px; border-radius: 4px; cursor: pointer; font-family: inherit; }
+
+    .tab-bar { display: flex; background: #fff; border-bottom: 2px solid #e8e8e8; padding: 0; position: sticky; top: 0; z-index: 9; }
+    .tab-btn { flex: 1; padding: 12px 0; text-align: center; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #888; background: none; border: none; border-bottom: 3px solid transparent; margin-bottom: -2px; cursor: pointer; font-family: inherit; }
+    .tab-btn.active { color: #1a3f7a; border-bottom-color: #1a3f7a; }
+
+    .tab-panel { display: none; padding: 0 0 60px; }
+    .tab-panel.active { display: block; }
+
+    .widget-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 12px 16px; }
+    .widget { background: #fff; border-radius: 10px; padding: 14px; border: 1px solid #e5e5e5; }
+    .widget .wlabel { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .widget .wlabel.practice { color: #1a3f7a; }
+    .widget .wlabel.game { color: #b7600a; }
+    .widget .wdate { font-size: 15px; font-weight: 800; }
+    .widget .wdetail { font-size: 11px; color: #888; margin-top: 2px; }
+
+    .section-card { background: #fff; border: 1px solid #e5e5e5; border-radius: 10px; padding: 16px; margin: 0 16px 12px; }
+    .section-card h2 { font-size: 15px; font-weight: 800; color: #1a3f7a; margin-bottom: 10px; }
+    .section-card h3 { font-size: 12px; font-weight: 700; color: #555; margin: 14px 0 8px; }
+
+    .sched-row { display: flex; align-items: center; gap: 8px; padding: 9px 0; border-bottom: 1px solid #f0f0f0; font-size: 13px; }
+    .sched-row:last-child { border-bottom: none; }
+    .sched-date { font-weight: 700; min-width: 70px; font-size: 12px; }
+    .sched-detail { color: #666; font-size: 12px; flex: 1; }
+    .sched-actions { display: flex; gap: 4px; }
+    .sched-actions button { font-family: inherit; font-size: 11px; padding: 3px 8px; border-radius: 4px; border: 1px solid #ddd; background: #fff; cursor: pointer; }
+    .ext-tag { font-size: 9px; color: #888; text-transform: uppercase; margin-left: 4px; }
+
+    .msg-item { padding: 12px; background: #f4f6fa; border-radius: 10px; margin-bottom: 8px; }
+    .msg-head { display: flex; gap: 8px; align-items: baseline; font-size: 11px; color: #888; margin-bottom: 4px; }
+    .msg-author { font-weight: 700; color: #1a3f7a; }
+    .msg-body { font-size: 13px; line-height: 1.45; white-space: pre-wrap; }
+    .msg-actions { display: flex; gap: 6px; margin-top: 8px; }
+    .msg-actions button { font-family: inherit; font-size: 11px; padding: 3px 8px; border-radius: 4px; border: 1px solid #ddd; background: #fff; cursor: pointer; }
+    .msg-actions button.danger { color: #c0392b; }
+
+    .form-row { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+    .form-row label { font-size: 10px; font-weight: 700; color: #5a9cf5; text-transform: uppercase; letter-spacing: 0.5px; }
+    .form-row input, .form-row textarea { font-family: inherit; font-size: 13px; padding: 8px 10px; border: 1px solid #ddd; border-radius: 6px; }
+    .form-row textarea { min-height: 60px; resize: vertical; }
+
+    .btn { font-family: inherit; font-size: 13px; font-weight: 700; padding: 9px 16px; border-radius: 6px; border: none; cursor: pointer; background: #1a3f7a; color: #fff; }
+    .btn.secondary { background: #fff; border: 1px solid #ddd; color: #222; }
+    .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .invite-box { text-align: center; padding: 12px 0; }
+    .invite-code { font-family: 'SF Mono', Consolas, monospace; font-size: 28px; font-weight: 900; letter-spacing: 4px; color: #1a3f7a; background: #f0f4ff; padding: 10px 20px; border-radius: 8px; display: inline-block; user-select: all; }
+    .invite-expiry { font-size: 11px; color: #888; margin-top: 4px; }
+    .invite-expired { color: #c0392b; }
+
+    .clip-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .clip-card { border: 1px solid #e5e5e5; border-radius: 8px; background: #fff; overflow: hidden; cursor: pointer; text-align: left; padding: 0; font-family: inherit; color: inherit; display: flex; flex-direction: column; }
+    .clip-thumb { width: 100%; aspect-ratio: 16/9; background: #222 center/cover no-repeat; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 18px; }
+    .clip-title { padding: 8px 10px; font-size: 12px; font-weight: 600; }
+
+    .roster-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .roster-item { padding: 8px 10px; background: #f8f8f8; border-radius: 6px; font-size: 13px; }
+    .roster-name { font-weight: 600; }
+    .roster-email { font-size: 10px; color: #888; margin-top: 1px; }
+    .parents-count { margin-top: 10px; font-size: 12px; color: #888; font-style: italic; }
+
+    .inline-msg { padding: 8px 12px; border-radius: 6px; font-size: 12px; margin-top: 8px; }
+    .inline-msg.error { background: #fdecea; color: #c0392b; }
+    .inline-msg.success { background: #e6f7ed; color: #27ae60; }
+    .inline-msg[hidden] { display: none; }
+
+    .empty { text-align: center; padding: 24px; color: #bbb; font-size: 13px; }
+
+    .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .cal-header h3 { font-size: 14px; font-weight: 800; color: #1a3f7a; }
+    .cal-header button { background: none; border: 1px solid #ddd; border-radius: 4px; padding: 4px 10px; cursor: pointer; font-family: inherit; font-size: 12px; font-weight: 700; color: #1a3f7a; }
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+    .cal-day-label { text-align: center; font-size: 10px; font-weight: 700; color: #888; text-transform: uppercase; padding: 4px 0; }
+    .cal-cell { min-height: 64px; background: #fff; border: 1px solid #f0f0f0; border-radius: 4px; padding: 2px; font-size: 10px; }
+    .cal-cell.other-month { background: #fafafa; color: #ccc; }
+    .cal-cell.today { border-color: #1a3f7a; border-width: 2px; }
+    .cal-cell .cal-num { font-weight: 700; font-size: 11px; padding: 1px 3px; }
+    .cal-event { display: block; padding: 1px 3px; font-size: 9px; font-weight: 700; margin-top: 1px; line-height: 1.3; }
+    .cal-event div:first-child { text-transform: uppercase; }
+    .cal-event div:not(:first-child) { font-weight: 400; }
+    .cal-event.past { opacity: 0.4; text-decoration: line-through; }
+  </style>
+</head>
+<body>
+
+<div class="team-header">
+  <div class="header-row">
+    <div>
+      <div style="font-size:12px;color:#aac4f5;" data-testid="welcome-msg">Welcome</div>
+      <div class="team-name" data-testid="team-name">Loading...</div>
+      <div class="team-meta" data-testid="team-meta"></div>
+    </div>
+    <div style="text-align:right;">
+      <button class="signout-sm" data-testid="signout">Sign out</button>
+    </div>
+  </div>
+</div>
+
+<div class="tab-bar">
+  <button class="tab-btn active" data-tab="schedule" data-testid="tab-schedule">Schedule</button>
+  <button class="tab-btn" data-tab="feed" data-testid="tab-feed">Messages</button>
+  <button class="tab-btn" data-tab="roster" data-testid="tab-roster">Roster</button>
+</div>
+
+<!-- SCHEDULE TAB -->
+<div class="tab-panel active" id="schedulePanel">
+  <div class="widget-row">
+    <div class="widget">
+      <div class="wlabel practice">Next Practice</div>
+      <div class="wdate" data-testid="wp-date">—</div>
+      <div class="wdetail" data-testid="wp-detail"></div>
+    </div>
+    <div class="widget">
+      <div class="wlabel game">Next Game</div>
+      <div class="wdate" data-testid="wg-date">—</div>
+      <div class="wdetail" data-testid="wg-detail"></div>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <div class="cal-header">
+      <button data-testid="cal-prev">&larr;</button>
+      <h3 data-testid="cal-month">April 2026</h3>
+      <button data-testid="cal-next">&rarr;</button>
+    </div>
+    <div class="cal-grid" data-testid="cal-grid">
+      <div class="cal-day-label">Sun</div><div class="cal-day-label">Mon</div><div class="cal-day-label">Tue</div><div class="cal-day-label">Wed</div><div class="cal-day-label">Thu</div><div class="cal-day-label">Fri</div><div class="cal-day-label">Sat</div>
+    </div>
+    <div class="empty" data-testid="sched-empty" hidden>No events.</div>
+    <div data-testid="sched-list" style="margin-top:12px;"></div>
+
+    <h3 style="margin-top:16px;">Add Event</h3>
+    <div class="form-row">
+      <label>Type</label>
+      <input type="text" data-testid="ev-type" placeholder="practice, game, clinic...">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <div class="form-row"><label>Date</label><input type="date" data-testid="ev-date"></div>
+      <div class="form-row"><label>Time</label><input type="time" data-testid="ev-time"></div>
+    </div>
+    <div class="form-row"><label>Location</label><input type="text" data-testid="ev-location"></div>
+    <div class="form-row"><label>Opponent (optional)</label><input type="text" data-testid="ev-opponent"></div>
+    <div class="form-row"><label>Notes (optional)</label><input type="text" data-testid="ev-notes"></div>
+    <div class="btn-row">
+      <button class="btn" data-testid="ev-submit">Add event</button>
+      <button class="btn secondary" data-testid="ev-cancel" hidden>Cancel edit</button>
+    </div>
+
+    <h3>Import External Games</h3>
+    <p style="font-size:11px;color:#888;margin-bottom:6px;">One per line: <code>YYYY-MM-DD HH:MM vs Opponent @ Location</code></p>
+    <div class="form-row">
+      <textarea data-testid="ext-paste" placeholder="2026-05-04 15:00 vs Hawks @ Balboa" style="min-height:50px;"></textarea>
+    </div>
+    <div class="btn-row">
+      <button class="btn secondary" data-testid="ext-import">Import games</button>
+    </div>
+    <div class="inline-msg success" data-testid="ext-success" hidden></div>
+    <div class="inline-msg error" data-testid="ext-error" hidden></div>
+  </div>
+</div>
+
+<!-- MESSAGES TAB -->
+<div class="tab-panel" id="feedPanel">
+  <div class="section-card">
+    <h2>Post a Message</h2>
+    <div class="form-row">
+      <textarea data-testid="msg-body" placeholder="Practice is cancelled Friday..." style="min-height:50px;"></textarea>
+    </div>
+    <div class="btn-row">
+      <button class="btn" data-testid="msg-submit">Post</button>
+      <button class="btn secondary" data-testid="msg-cancel" hidden>Cancel edit</button>
+    </div>
+  </div>
+
+  <div class="section-card">
+    <h2>Your Messages</h2>
+    <div class="empty" data-testid="msg-list-empty" hidden>No posts yet.</div>
+    <div data-testid="msg-list"></div>
+  </div>
+
+  <div class="section-card">
+    <h2>Game Clips</h2>
+    <div class="empty" data-testid="clips-empty" hidden>No clips yet.</div>
+    <div class="clip-grid" data-testid="clip-grid"></div>
+
+    <h3 style="margin-top:16px;">Add Clip from Drive</h3>
+    <div class="form-row"><label>Title</label><input type="text" data-testid="clip-title" placeholder="e.g. Highlight — Atty"></div>
+    <div class="form-row"><label>Google Drive link</label><input type="url" data-testid="clip-url" placeholder="https://drive.google.com/file/d/.../view"></div>
+    <div class="form-row"><label>Commentary (optional)</label><textarea data-testid="clip-commentary" placeholder="Watch how she drives..." style="min-height:50px;"></textarea></div>
+    <div class="btn-row">
+      <button class="btn" data-testid="clip-submit">Add Clip</button>
+      <button class="btn secondary" data-testid="clip-cancel" hidden>Cancel edit</button>
+    </div>
+    <div class="inline-msg error" data-testid="clip-error" hidden></div>
+    <div class="inline-msg success" data-testid="clip-success" hidden></div>
+  </div>
+</div>
+
+<!-- ROSTER TAB -->
+<div class="tab-panel" id="rosterPanel">
+  <div class="section-card">
+    <h2>Invite Code</h2>
+    <p style="font-size:12px;color:#666;margin-bottom:10px;">Share this code with players and parents. Expires after 7 days.</p>
+    <div class="invite-box">
+      <div class="invite-code" data-testid="invite-code">—</div>
+      <div class="invite-expiry" data-testid="invite-expiry"></div>
+    </div>
+    <div class="btn-row" style="justify-content:center;margin-top:10px;">
+      <button class="btn" data-testid="generate-code">Generate New</button>
+      <button class="btn secondary" data-testid="copy-code">Copy</button>
+    </div>
+    <div class="inline-msg success" data-testid="copy-success" hidden>Copied!</div>
+  </div>
+
+  <div class="section-card">
+    <h2>Coaches</h2>
+    <div data-testid="roster-coaches"></div>
+  </div>
+  <div class="section-card">
+    <h2>Players</h2>
+    <div data-testid="roster-players"></div>
+    <div class="parents-count" data-testid="parents-count" hidden></div>
+  </div>
+  <div data-testid="roster-list" hidden></div>
+</div>
+
+<!-- VIDEO MODAL -->
+<div class="modal-backdrop" data-testid="clip-modal" hidden role="dialog" aria-modal="true">
+  <div class="modal-dialog">
+    <button class="modal-close" data-testid="clip-modal-close" aria-label="Close">&times;</button>
+    <div class="modal-title" data-testid="clip-modal-title"></div>
+    <iframe data-testid="clip-modal-iframe" src="" allow="autoplay"></iframe>
+    <div class="modal-commentary" data-testid="clip-modal-commentary"></div>
+  </div>
+</div>
+
+<script type="module">
+import {
+  onAuthReady, signOut, getTeam, updateTeam,
+  listMessages, addMessage, updateMessage, deleteMessage,
+  listSchedule, addScheduleEvent, updateScheduleEvent, deleteScheduleEvent,
+  listTeamMembers, countTeamParents,
+  listClips, addClip, updateClip, deleteClip,
+  formatDate, formatTime, formatRelative, colorForType,
+  generateInviteCode, parseExternalGames,
+  drivePreviewUrl, driveThumbnailUrl, parseDriveUrl, renderText,
+} from './shared.js';
+
+const params = new URLSearchParams(window.location.search);
+const teamId = params.get('id');
+const TESTMODE = params.get('testmode') === '1';
+const qs = TESTMODE ? '?testmode=1' : '';
+const amp = TESTMODE ? '&testmode=1' : '';
+
+let currentUser = null;
+let editingMessageId = null;
+let editingEventId = null;
+
+// TABS
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab + 'Panel').classList.add('active');
+  });
+});
+
+onAuthReady(async (user) => {
+  if (!user) { window.location.href = 'signin.html' + qs; return; }
+  currentUser = user;
+  const name = user.displayName || user.email || '';
+  document.querySelector('[data-testid="welcome-msg"]').textContent = 'Coach ' + name;
+
+  if (!teamId) { document.body.innerHTML = '<p style="padding:20px">Missing team id.</p>'; return; }
+  const memberships = user.teamMemberships || {};
+  if (memberships[teamId] !== 'coach' && user.role !== 'admin') {
+    document.body.innerHTML = '<p style="padding:20px">Only coaches can access this page. <a href="portal.html">Go back</a></p>';
+    return;
+  }
+
+  const team = await getTeam(teamId);
+  if (team) {
+    document.querySelector('[data-testid="team-name"]').textContent = team.name || '';
+    const metaParts = [team.ageGroup, [team.season, team.year].filter(Boolean).join(' '), 'Coach Dashboard'].filter(Boolean);
+    document.querySelector('[data-testid="team-meta"]').textContent = metaParts.join(' \u00b7 ');
+  }
+
+  await Promise.all([refreshSchedule(), refreshMessages(), refreshClips(), refreshRoster(), refreshInvite()]);
+  document.body.dataset.ready = '1';
+});
+
+// ===== SCHEDULE + CALENDAR =====
+let calYear, calMonth, scheduleData = [];
+
+async function refreshSchedule() {
+  scheduleData = await listSchedule(teamId);
+  const schedList = document.querySelector('[data-testid="sched-list"]');
+  const schedEmpty = document.querySelector('[data-testid="sched-empty"]');
+  const todayStr = new Date().toISOString().slice(0, 10);
+
+  // Widgets
+  const nextPractice = scheduleData.find(e => (e.type || '').toLowerCase().includes('practice') && e.date >= todayStr);
+  const nextGame = scheduleData.find(e => (e.type || '').toLowerCase().includes('game') && e.date >= todayStr);
+  document.querySelector('[data-testid="wp-date"]').textContent = nextPractice ? formatDate(nextPractice.date) : '—';
+  document.querySelector('[data-testid="wp-detail"]').textContent = nextPractice
+    ? [formatTime(nextPractice.time), nextPractice.location ? `@ ${nextPractice.location}` : ''].filter(Boolean).join(' ')
+    : 'None scheduled';
+  document.querySelector('[data-testid="wg-date"]').textContent = nextGame ? formatDate(nextGame.date) : '—';
+  document.querySelector('[data-testid="wg-detail"]').textContent = nextGame
+    ? [formatTime(nextGame.time), nextGame.opponent ? `vs ${nextGame.opponent}` : ''].filter(Boolean).join(' ')
+    : 'None scheduled';
+
+  // Event list with edit/delete
+  schedList.innerHTML = '';
+  if (scheduleData.length === 0) { schedEmpty.hidden = false; } else { schedEmpty.hidden = true; }
+  for (const e of scheduleData) {
+    const color = colorForType(e.type);
+    const div = document.createElement('div');
+    div.className = 'sched-row';
+    div.dataset.testid = 'coach-sched-item';
+    div.dataset.eventId = e.id;
+    div.innerHTML = `
+      <span class="badge" style="background:${color.bg};color:${color.fg};font-size:10px;min-width:55px;text-align:center;">${escapeHtml(e.type || 'event')}</span>
+      <span class="sched-date">${escapeHtml(formatDate(e.date))}</span>
+      <span class="sched-detail">${escapeHtml(formatTime(e.time))} ${e.opponent ? `vs ${escapeHtml(e.opponent)}` : ''} ${e.location ? `@ ${escapeHtml(e.location)}` : ''}</span>
+      <span class="sched-actions">
+        <button data-testid="sched-edit" data-id="${e.id}">Edit</button>
+        <button data-testid="sched-delete" data-id="${e.id}">Del</button>
+      </span>
+    `;
+    schedList.appendChild(div);
+  }
+
+  // Calendar
+  const now = new Date();
+  calYear = calYear || now.getFullYear();
+  calMonth = calMonth ?? now.getMonth();
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.querySelector('[data-testid="cal-month"]').textContent = `${monthNames[calMonth]} ${calYear}`;
+  const grid = document.querySelector('[data-testid="cal-grid"]');
+  while (grid.children.length > 7) grid.removeChild(grid.lastChild);
+
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const todayStr = new Date().toISOString().slice(0, 10);
+
+  const eventsByDate = {};
+  for (const e of scheduleData) { (eventsByDate[e.date] ||= []).push(e); }
+
+  for (let i = 0; i < firstDay; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'cal-cell other-month';
+    grid.appendChild(cell);
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateStr = `${calYear}-${String(calMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+    const cell = document.createElement('div');
+    cell.className = 'cal-cell';
+    if (dateStr === todayStr) cell.classList.add('today');
+    const num = document.createElement('div');
+    num.className = 'cal-num';
+    num.textContent = d;
+    cell.appendChild(num);
+    const dayEvts = eventsByDate[dateStr] || [];
+    if (dayEvts.length > 0) {
+      const firstColor = colorForType(dayEvts[0].type);
+      cell.style.background = firstColor.bg;
+    }
+    for (const e of dayEvts) {
+      const color = colorForType(e.type);
+      const tag = document.createElement('div');
+      tag.className = 'cal-event';
+      if (dateStr < todayStr) tag.classList.add('past');
+      tag.style.color = color.fg;
+      tag.innerHTML = `<div>${escapeHtml(e.type || 'event')}</div>${e.time ? `<div>${escapeHtml(formatTime(e.time))}</div>` : ''}${e.location ? `<div>@ ${escapeHtml(e.location)}</div>` : ''}`;
+      cell.appendChild(tag);
+    }
+    grid.appendChild(cell);
+  }
+}
+
+document.querySelector('[data-testid="cal-prev"]').addEventListener('click', () => {
+  calMonth--;
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  renderCalendar();
+});
+document.querySelector('[data-testid="cal-next"]').addEventListener('click', () => {
+  calMonth++;
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  renderCalendar();
+});
+
+const evType = document.querySelector('[data-testid="ev-type"]');
+const evDate = document.querySelector('[data-testid="ev-date"]');
+const evTime = document.querySelector('[data-testid="ev-time"]');
+const evLocation = document.querySelector('[data-testid="ev-location"]');
+const evOpponent = document.querySelector('[data-testid="ev-opponent"]');
+const evNotes = document.querySelector('[data-testid="ev-notes"]');
+const evSubmit = document.querySelector('[data-testid="ev-submit"]');
+const evCancel = document.querySelector('[data-testid="ev-cancel"]');
+
+evSubmit.addEventListener('click', async () => {
+  const payload = { type: evType.value.trim() || 'event', date: evDate.value, time: evTime.value, location: evLocation.value.trim(), opponent: evOpponent.value.trim(), notes: evNotes.value.trim(), source: 'custom' };
+  if (!payload.date) return;
+  if (editingEventId) {
+    await updateScheduleEvent(teamId, editingEventId, payload);
+    editingEventId = null;
+    evSubmit.textContent = 'Add event';
+    evCancel.hidden = true;
+  } else {
+    await addScheduleEvent(teamId, payload);
+  }
+  [evType, evDate, evTime, evLocation, evOpponent, evNotes].forEach(el => el.value = '');
+  await refreshSchedule();
+});
+
+evCancel.addEventListener('click', () => {
+  editingEventId = null;
+  [evType, evDate, evTime, evLocation, evOpponent, evNotes].forEach(el => el.value = '');
+  evSubmit.textContent = 'Add event';
+  evCancel.hidden = true;
+});
+
+document.querySelector('[data-testid="sched-list"]').addEventListener('click', async (e) => {
+  const target = e.target;
+  if (!(target instanceof HTMLElement)) return;
+  const id = target.dataset.id;
+  if (!id) return;
+  if (target.dataset.testid === 'sched-edit') {
+    const list = await listSchedule(teamId);
+    const ev = list.find(x => x.id === id);
+    if (!ev) return;
+    evType.value = ev.type || '';
+    evDate.value = ev.date || '';
+    evTime.value = ev.time || '';
+    evLocation.value = ev.location || '';
+    evOpponent.value = ev.opponent || '';
+    evNotes.value = ev.notes || '';
+    editingEventId = id;
+    evSubmit.textContent = 'Save';
+    evCancel.hidden = false;
+  } else if (target.dataset.testid === 'sched-delete') {
+    await deleteScheduleEvent(teamId, id);
+    await refreshSchedule();
+  }
+});
+
+// External games
+const extPaste = document.querySelector('[data-testid="ext-paste"]');
+const extSuccess = document.querySelector('[data-testid="ext-success"]');
+const extError = document.querySelector('[data-testid="ext-error"]');
+document.querySelector('[data-testid="ext-import"]').addEventListener('click', async () => {
+  extSuccess.hidden = true; extError.hidden = true;
+  const { ok, errors } = parseExternalGames(extPaste.value);
+  if (errors.length) { extError.textContent = errors.join('\n'); extError.hidden = false; return; }
+  if (ok.length === 0) { extError.textContent = 'Paste at least one game.'; extError.hidden = false; return; }
+  for (const g of ok) await addScheduleEvent(teamId, g);
+  extPaste.value = '';
+  extSuccess.textContent = `Imported ${ok.length} game${ok.length === 1 ? '' : 's'}.`;
+  extSuccess.hidden = false;
+  await refreshSchedule();
+});
+
+// ===== MESSAGES =====
+const msgBody = document.querySelector('[data-testid="msg-body"]');
+const msgSubmit = document.querySelector('[data-testid="msg-submit"]');
+const msgCancel = document.querySelector('[data-testid="msg-cancel"]');
+const msgList = document.querySelector('[data-testid="msg-list"]');
+const msgListEmpty = document.querySelector('[data-testid="msg-list-empty"]');
+
+async function refreshMessages() {
+  const all = await listMessages(teamId);
+  const mine = all.filter(m => m.authorId === currentUser.uid);
+  msgList.innerHTML = '';
+  if (mine.length === 0) { msgListEmpty.hidden = false; return; }
+  msgListEmpty.hidden = true;
+  for (const m of mine) {
+    const div = document.createElement('div');
+    div.className = 'msg-item';
+    div.dataset.testid = 'coach-msg';
+    div.dataset.messageId = m.id;
+    div.innerHTML = `
+      <div class="msg-head"><span class="msg-author">You</span><span>${escapeHtml(formatRelative(m.createdAt))}</span></div>
+      <div class="msg-body">${escapeHtml(m.body)}</div>
+      <div class="msg-actions">
+        <button data-testid="msg-edit" data-id="${m.id}">Edit</button>
+        <button class="danger" data-testid="msg-delete" data-id="${m.id}">Delete</button>
+      </div>
+    `;
+    msgList.appendChild(div);
+  }
+}
+
+msgSubmit.addEventListener('click', async () => {
+  const body = msgBody.value.trim();
+  if (!body) return;
+  if (editingMessageId) {
+    await updateMessage(teamId, editingMessageId, { body });
+    editingMessageId = null;
+    msgCancel.hidden = true;
+    msgSubmit.textContent = 'Post';
+  } else {
+    await addMessage(teamId, { body, authorId: currentUser.uid, authorName: currentUser.displayName || currentUser.email || 'Coach' });
+  }
+  msgBody.value = '';
+  await refreshMessages();
+});
+
+msgCancel.addEventListener('click', () => {
+  editingMessageId = null;
+  msgBody.value = '';
+  msgCancel.hidden = true;
+  msgSubmit.textContent = 'Post';
+});
+
+msgList.addEventListener('click', async (e) => {
+  const target = e.target;
+  if (!(target instanceof HTMLElement)) return;
+  const id = target.dataset.id;
+  if (!id) return;
+  if (target.dataset.testid === 'msg-edit') {
+    const all = await listMessages(teamId);
+    const m = all.find(x => x.id === id);
+    if (!m) return;
+    msgBody.value = m.body;
+    editingMessageId = id;
+    msgCancel.hidden = false;
+    msgSubmit.textContent = 'Save';
+    msgBody.focus();
+  } else if (target.dataset.testid === 'msg-delete') {
+    await deleteMessage(teamId, id);
+    await refreshMessages();
+  }
+});
+
+// ===== CLIPS =====
+let editingClipId = null;
+const clipTitle = document.querySelector('[data-testid="clip-title"]');
+const clipUrl = document.querySelector('[data-testid="clip-url"]');
+const clipCommentary = document.querySelector('[data-testid="clip-commentary"]');
+const clipSubmit = document.querySelector('[data-testid="clip-submit"]');
+const clipCancel = document.querySelector('[data-testid="clip-cancel"]');
+const clipError = document.querySelector('[data-testid="clip-error"]');
+const clipSuccess = document.querySelector('[data-testid="clip-success"]');
+
+async function refreshClips() {
+  const clips = await listClips(teamId);
+  const clipGrid = document.querySelector('[data-testid="clip-grid"]');
+  const clipsEmpty = document.querySelector('[data-testid="clips-empty"]');
+  clipGrid.innerHTML = '';
+  if (clips.length === 0) { clipsEmpty.hidden = false; return; }
+  clipsEmpty.hidden = true;
+  for (const c of clips) {
+    const fileId = c.driveFileId || parseDriveUrl(c.driveUrl);
+    const thumb = c.thumbnailUrl || (fileId ? driveThumbnailUrl(fileId) : '');
+    const div = document.createElement('div');
+    div.style.cssText = 'position:relative;';
+    div.innerHTML = `
+      <button class="clip-card" type="button" data-testid="clip-card" style="width:100%;">
+        <div class="clip-thumb" style="${thumb ? `background-image:url('${thumb}')` : ''}">${thumb ? '' : '&#9654;'}</div>
+        <div class="clip-title">${escapeHtml(c.title || 'Untitled')}</div>
+      </button>
+      <div style="display:flex;gap:4px;padding:4px 4px 0;">
+        <button data-testid="clip-edit-btn" data-id="${c.id}" style="font-family:inherit;font-size:10px;padding:2px 6px;border:1px solid #ddd;border-radius:4px;background:#fff;cursor:pointer;">Edit</button>
+        <button data-testid="clip-delete-btn" data-id="${c.id}" style="font-family:inherit;font-size:10px;padding:2px 6px;border:1px solid #ddd;border-radius:4px;background:#fff;cursor:pointer;color:#c0392b;">Del</button>
+      </div>
+    `;
+    div.querySelector('.clip-card').addEventListener('click', () => {
+      document.querySelector('[data-testid="clip-modal-title"]').textContent = c.title || '';
+      document.querySelector('[data-testid="clip-modal-iframe"]').src = fileId ? drivePreviewUrl(fileId) : '';
+      document.querySelector('[data-testid="clip-modal-commentary"]').innerHTML = renderText(c.commentary || '');
+      document.querySelector('[data-testid="clip-modal"]').hidden = false;
+    });
+    div.querySelector('[data-testid="clip-edit-btn"]').addEventListener('click', () => {
+      clipTitle.value = c.title || '';
+      clipUrl.value = c.driveUrl || '';
+      clipCommentary.value = c.commentary || '';
+      editingClipId = c.id;
+      clipSubmit.textContent = 'Save Changes';
+      clipCancel.hidden = false;
+      clipTitle.focus();
+    });
+    div.querySelector('[data-testid="clip-delete-btn"]').addEventListener('click', async () => {
+      await deleteClip(teamId, c.id);
+      await refreshClips();
+    });
+    clipGrid.appendChild(div);
+  }
+}
+
+clipSubmit.addEventListener('click', async () => {
+  clipError.hidden = true;
+  clipSuccess.hidden = true;
+  const title = clipTitle.value.trim();
+  const driveUrl = clipUrl.value.trim();
+  const commentary = clipCommentary.value.trim();
+  if (!title) { clipError.textContent = 'Enter a title.'; clipError.hidden = false; return; }
+  if (!driveUrl) { clipError.textContent = 'Paste a Google Drive link.'; clipError.hidden = false; return; }
+  const driveFileId = parseDriveUrl(driveUrl);
+  if (!driveFileId) { clipError.textContent = 'Could not parse Drive link. Use a link like https://drive.google.com/file/d/.../view'; clipError.hidden = false; return; }
+
+  if (editingClipId) {
+    await updateClip(teamId, editingClipId, { title, driveUrl, driveFileId, commentary });
+    clipSuccess.textContent = 'Clip updated.';
+    editingClipId = null;
+    clipSubmit.textContent = 'Add Clip';
+    clipCancel.hidden = true;
+  } else {
+    await addClip(teamId, { title, driveUrl, driveFileId, commentary });
+    clipSuccess.textContent = 'Clip added!';
+  }
+  clipSuccess.hidden = false;
+  clipTitle.value = '';
+  clipUrl.value = '';
+  clipCommentary.value = '';
+  await refreshClips();
+});
+
+clipCancel.addEventListener('click', () => {
+  editingClipId = null;
+  clipTitle.value = '';
+  clipUrl.value = '';
+  clipCommentary.value = '';
+  clipSubmit.textContent = 'Add Clip';
+  clipCancel.hidden = true;
+  clipError.hidden = true;
+  clipSuccess.hidden = true;
+});
+
+const modal = document.querySelector('[data-testid="clip-modal"]');
+document.querySelector('[data-testid="clip-modal-close"]').addEventListener('click', () => { modal.hidden = true; document.querySelector('[data-testid="clip-modal-iframe"]').src = ''; });
+modal.addEventListener('click', (e) => { if (e.target === modal) { modal.hidden = true; document.querySelector('[data-testid="clip-modal-iframe"]').src = ''; } });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !modal.hidden) { modal.hidden = true; document.querySelector('[data-testid="clip-modal-iframe"]').src = ''; } });
+
+// ===== ROSTER + INVITE =====
+async function refreshRoster() {
+  const members = await listTeamMembers(teamId);
+  const coachesEl = document.querySelector('[data-testid="roster-coaches"]');
+  const playersEl = document.querySelector('[data-testid="roster-players"]');
+  const rosterList = document.querySelector('[data-testid="roster-list"]');
+  const parentsCountEl = document.querySelector('[data-testid="parents-count"]');
+
+  coachesEl.innerHTML = '';
+  playersEl.innerHTML = '';
+  rosterList.innerHTML = '';
+
+  for (const m of members) {
+    const mtype = m.teamMemberships?.[teamId] || '';
+    const div = document.createElement('div');
+    div.className = 'roster-item';
+    div.dataset.testid = 'roster-item';
+    div.innerHTML = `
+      <div class="roster-name">${escapeHtml(m.displayName || '')}</div>
+      <div class="roster-email">${escapeHtml(m.email || '')}</div>
+    `;
+    if (mtype === 'coach') {
+      coachesEl.appendChild(div);
+    } else {
+      playersEl.appendChild(div);
+    }
+    rosterList.appendChild(div.cloneNode(true));
+  }
+
+  if (coachesEl.children.length === 0) coachesEl.innerHTML = '<div class="empty" style="padding:10px;">None</div>';
+  if (playersEl.children.length === 0) playersEl.innerHTML = '<div class="empty" style="padding:10px;">None</div>';
+
+  const parents = await countTeamParents(teamId);
+  if (parents > 0) {
+    parentsCountEl.textContent = `${parents} parent${parents === 1 ? '' : 's'} also following`;
+    parentsCountEl.hidden = false;
+  } else {
+    parentsCountEl.hidden = true;
+  }
+}
+
+async function refreshInvite() {
+  const team = await getTeam(teamId);
+  const codeEl = document.querySelector('[data-testid="invite-code"]');
+  const expiryEl = document.querySelector('[data-testid="invite-expiry"]');
+  if (!team?.activeInviteCode) {
+    codeEl.textContent = '—';
+    expiryEl.textContent = 'No active code. Generate one.';
+    expiryEl.classList.remove('invite-expired');
+    return;
+  }
+  codeEl.textContent = team.activeInviteCode;
+  const ms = (team.inviteExpiresAt || 0) - Date.now();
+  if (ms <= 0) { expiryEl.textContent = 'Expired'; expiryEl.classList.add('invite-expired'); }
+  else { const d = Math.ceil(ms / 86400000); expiryEl.textContent = `Expires in ~${d} day${d === 1 ? '' : 's'}`; expiryEl.classList.remove('invite-expired'); }
+}
+
+document.querySelector('[data-testid="generate-code"]').addEventListener('click', async () => {
+  await updateTeam(teamId, { activeInviteCode: generateInviteCode(), inviteExpiresAt: Date.now() + 7 * 86400000, inviteGeneratedBy: currentUser.uid });
+  await refreshInvite();
+});
+
+document.querySelector('[data-testid="copy-code"]').addEventListener('click', async () => {
+  const code = document.querySelector('[data-testid="invite-code"]').textContent;
+  if (!code || code === '—') return;
+  try { await navigator.clipboard.writeText(code); } catch {}
+  const el = document.querySelector('[data-testid="copy-success"]');
+  el.hidden = false;
+  setTimeout(() => el.hidden = true, 1500);
+});
+
+// SIGN OUT
+document.querySelector('[data-testid="signout"]').addEventListener('click', async () => {
+  await signOut();
+  window.location.href = 'signin.html' + qs;
+});
+
+function escapeHtml(s) { return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+</script>
+
+</body>
+</html>

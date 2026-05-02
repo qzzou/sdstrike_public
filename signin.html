@@ -11,17 +11,14 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: 'Barlow', sans-serif; color: #222; background: #fff; max-width: 480px; margin: 0 auto; min-height: 100vh; }
 
-  /* NAV */
   nav { display: flex; justify-content: space-between; align-items: center; padding: 2px 16px 6px; background: #fff; border-bottom: 3px solid #1a3f7a; }
   nav .logo img { height: 40px; }
   nav .back-link { color: #1a3f7a; text-decoration: none; font-weight: 700; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 1px; }
 
-  /* SIGN IN CONTAINER */
   .signin-wrap { padding: 40px 24px 48px; }
   .signin-wrap h1 { font-size: 1.8rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
   .signin-wrap .subtitle { color: #888; font-size: 0.9rem; line-height: 1.5; margin-bottom: 32px; }
 
-  /* FORM */
   .form-group { margin-bottom: 20px; }
   .form-group label { display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #555; margin-bottom: 8px; }
   .form-group input { width: 100%; padding: 14px 16px; border: 2px solid #e0e0e0; border-radius: 4px; font-size: 1rem; font-family: inherit; color: #222; outline: none; transition: border-color 0.2s; -webkit-appearance: none; }
@@ -33,17 +30,16 @@
   .signin-btn { width: 100%; background: #1a3f7a; color: #fff; border: none; padding: 16px; font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; border-radius: 4px; cursor: pointer; font-family: inherit; transition: background 0.2s; }
   .signin-btn:active { background: #142f5c; }
 
-  /* DIVIDER */
   .divider { display: flex; align-items: center; gap: 12px; margin: 28px 0; color: #ccc; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
   .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: #e8e8e8; }
 
-  /* SOCIAL BUTTONS */
   .social-btn { width: 100%; background: #fff; border: 2px solid #e0e0e0; border-radius: 4px; padding: 14px 16px; font-size: 0.9rem; font-weight: 600; font-family: inherit; color: #222; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 12px; transition: border-color 0.2s, background 0.2s; }
   .social-btn:hover { border-color: #bbb; background: #fafafa; }
 
-  /* SIGN UP PROMPT */
   .signup-prompt { text-align: center; margin-top: 32px; padding-top: 24px; border-top: 1px solid #f0f0f0; font-size: 0.85rem; color: #888; }
   .signup-prompt a { color: #1a3f7a; font-weight: 700; text-decoration: none; }
+
+  .auth-error { color: #c0392b; font-size: 0.85rem; margin-top: 12px; text-align: center; }
 </style>
 </head>
 <body>
@@ -56,29 +52,30 @@
 </nav>
 
 <div class="signin-wrap">
-  <h1>Sign In</h1>
-  <p class="subtitle">Access your team schedule and payment info.</p>
+  <h1 data-testid="heading">Sign In</h1>
+  <p class="subtitle" data-testid="subtitle">Access your team schedule and payment info.</p>
 
-  <form id="signinForm">
-    <div class="form-group" id="nameGroup" style="display:none;">
+  <form id="signinForm" data-testid="signin-form">
+    <div class="form-group" id="nameGroup" data-testid="name-group" style="display:none;">
       <label for="fullname">Full Name</label>
-      <input type="text" id="fullname" name="fullname" placeholder="Your name" autocomplete="name">
+      <input type="text" id="fullname" name="fullname" data-testid="fullname" placeholder="Your name" autocomplete="name">
     </div>
     <div class="form-group">
       <label for="email">Email</label>
-      <input type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email" required>
+      <input type="email" id="email" name="email" data-testid="email" placeholder="you@example.com" autocomplete="email" required>
     </div>
     <div class="form-group">
       <label for="password">Password</label>
-      <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="current-password" required>
+      <input type="password" id="password" name="password" data-testid="password" placeholder="••••••••" autocomplete="current-password" required>
     </div>
     <a href="#" class="forgot" id="forgotLink">Forgot password?</a>
-    <button type="submit" class="signin-btn" id="submitBtn">Sign In</button>
+    <button type="submit" class="signin-btn" id="submitBtn" data-testid="submit">Sign In</button>
+    <p class="auth-error" data-testid="auth-error" hidden></p>
   </form>
 
   <div class="divider">or</div>
 
-  <button class="social-btn" id="googleBtn">
+  <button class="social-btn" id="googleBtn" data-testid="google-btn">
     <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
       <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
       <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -88,108 +85,110 @@
     Continue with Google
   </button>
 
-  <div class="signup-prompt">
-    Don't have an account? <a href="#" id="toggleLink">Sign up</a>
+  <div class="signup-prompt" id="signupPrompt" data-testid="signup-prompt">
+    Don't have an account? <a href="#" id="toggleLink" data-testid="toggle-link">Sign up</a>
   </div>
 </div>
 
-<!-- Firebase SDK (modular, loaded as module) -->
 <script type="module">
-  import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js';
-  import { getAuth, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, GoogleAuthProvider, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
+import {
+  onAuthReady, signInWithGoogle, signInWithEmail, signUpWithEmail,
+} from './shared.js';
 
-  // ── PASTE YOUR FIREBASE CONFIG HERE ──────────────────────────────────────
-const firebaseConfig = {
-  apiKey: "AIzaSyBvbspciyWNFHljZPvKTvW47Z0dfQwSrzM",
-  authDomain: "sdstrike-4f344.firebaseapp.com",
-  projectId: "sdstrike-4f344",
-  storageBucket: "sdstrike-4f344.firebasestorage.app",
-  messagingSenderId: "828937445096",
-  appId: "1:828937445096:web:1041315fe97bde3744735d"
-};
-  // ─────────────────────────────────────────────────────────────────────────
+// Preserve ?testmode=1 across navigations.
+const TESTMODE = new URLSearchParams(location.search).get('testmode') === '1';
+const qs = TESTMODE ? '?testmode=1' : '';
 
-  const app  = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
+const headingEl = document.querySelector('[data-testid="heading"]');
+const subtitleEl = document.querySelector('[data-testid="subtitle"]');
+const submitEl = document.querySelector('[data-testid="submit"]');
+const nameGroup = document.querySelector('[data-testid="name-group"]');
+const forgotLink = document.getElementById('forgotLink');
+const signupPrompt = document.querySelector('[data-testid="signup-prompt"]');
+const errEl = document.querySelector('[data-testid="auth-error"]');
 
-  // Redirect to dashboard if already signed in
-  onAuthStateChanged(auth, (user) => {
-    if (user) window.location.href = 'dashboard.html';
-  });
+let isSignUp = false;
+let signingIn = false; // true while a sign-in is in progress, prevents onAuthReady race
 
-  // Toggle between sign-in and sign-up mode
-  let isSignUp = false;
-  document.getElementById('toggleLink').addEventListener('click', (e) => {
-    e.preventDefault();
-    isSignUp = !isSignUp;
-    document.querySelector('h1').textContent          = isSignUp ? 'Sign Up'        : 'Sign In';
-    document.querySelector('.subtitle').textContent   = isSignUp ? 'Create your SDStrike account.' : 'Access your team schedule and payment info.';
-    document.getElementById('submitBtn').textContent  = isSignUp ? 'Create Account' : 'Sign In';
-    document.getElementById('nameGroup').style.display = isSignUp ? 'block' : 'none';
-    document.getElementById('forgotLink').style.display = isSignUp ? 'none' : 'block';
-    document.getElementById('toggleLink').textContent = isSignUp ? 'Sign in' : 'Sign up';
-    document.querySelector('.signup-prompt').innerHTML = isSignUp
-      ? 'Already have an account? <a href="#" id="toggleLink">Sign in</a>'
-      : 'Don\'t have an account? <a href="#" id="toggleLink">Sign up</a>';
-    document.getElementById('toggleLink').addEventListener('click', arguments.callee);
-    clearError();
-  });
-
-  // Submit: sign in or sign up
-  document.getElementById('signinForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const email    = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value;
-    try {
-      if (isSignUp) {
-        const name = document.getElementById('fullname').value.trim();
-        const cred = await createUserWithEmailAndPassword(auth, email, password);
-        if (name) await updateProfile(cred.user, { displayName: name });
-      } else {
-        await signInWithEmailAndPassword(auth, email, password);
-      }
-    } catch (err) {
-      showError(friendlyError(err.code));
-    }
-  });
-
-  // Google sign-in
-  document.getElementById('googleBtn').addEventListener('click', async () => {
-    try {
-      await signInWithPopup(auth, new GoogleAuthProvider());
-    } catch (err) {
-      if (err.code !== 'auth/popup-closed-by-user') showError(friendlyError(err.code));
-    }
-  });
-
-  function clearError() {
-    const el = document.getElementById('authError');
-    if (el) el.textContent = '';
+// If already signed in, redirect to the routing hub.
+onAuthReady((user) => {
+  if (signingIn) return; // let the sign-in handler do the redirect after doc is written
+  if (user) {
+    window.location.href = 'dashboard.html' + qs;
+    return;
   }
+  document.body.dataset.ready = '1';
+});
 
-  function showError(msg) {
-    let el = document.getElementById('authError');
-    if (!el) {
-      el = document.createElement('p');
-      el.id = 'authError';
-      el.style.cssText = 'color:#c0392b; font-size:0.85rem; margin-top:12px; text-align:center;';
-      document.getElementById('signinForm').appendChild(el);
+function setMode(signUp) {
+  isSignUp = signUp;
+  headingEl.textContent = isSignUp ? 'Sign Up' : 'Sign In';
+  subtitleEl.textContent = isSignUp
+    ? 'Create your SDStrike account.'
+    : 'Access your team schedule and payment info.';
+  submitEl.textContent = isSignUp ? 'Create Account' : 'Sign In';
+  nameGroup.style.display = isSignUp ? 'block' : 'none';
+  forgotLink.style.display = isSignUp ? 'none' : 'block';
+  signupPrompt.innerHTML = isSignUp
+    ? 'Already have an account? <a href="#" id="toggleLink" data-testid="toggle-link">Sign in</a>'
+    : 'Don\'t have an account? <a href="#" id="toggleLink" data-testid="toggle-link">Sign up</a>';
+  document.getElementById('toggleLink').addEventListener('click', onToggleClick);
+  clearErr();
+}
+
+function onToggleClick(e) {
+  e.preventDefault();
+  setMode(!isSignUp);
+}
+document.getElementById('toggleLink').addEventListener('click', onToggleClick);
+
+document.getElementById('signinForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  clearErr();
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  signingIn = true;
+  try {
+    if (isSignUp) {
+      const name = document.getElementById('fullname').value.trim();
+      await signUpWithEmail(email, password, name);
+    } else {
+      await signInWithEmail(email, password);
     }
-    el.textContent = msg;
+    window.location.href = 'dashboard.html' + qs;
+  } catch (err) {
+    signingIn = false;
+    showErr(friendlyError(err?.code || err?.message));
   }
+});
 
-  function friendlyError(code) {
-    const map = {
-      'auth/user-not-found':   'No account found with that email.',
-      'auth/wrong-password':   'Incorrect password. Try again.',
-      'auth/invalid-email':    'Please enter a valid email address.',
-      'auth/too-many-requests':'Too many attempts. Try again later.',
-      'auth/invalid-credential':    'Incorrect email or password.',
-      'auth/email-already-in-use':  'An account with this email already exists.',
-      'auth/weak-password':         'Password must be at least 6 characters.',
-    };
-    return map[code] || 'Something went wrong. Please try again.';
+document.getElementById('googleBtn').addEventListener('click', async () => {
+  clearErr();
+  signingIn = true;
+  try {
+    await signInWithGoogle();
+    window.location.href = 'dashboard.html' + qs;
+  } catch (err) {
+    signingIn = false;
+    if (err?.code !== 'auth/popup-closed-by-user') showErr(friendlyError(err?.code || err?.message));
   }
+});
+
+function clearErr() { errEl.hidden = true; errEl.textContent = ''; }
+function showErr(msg) { errEl.textContent = msg; errEl.hidden = false; }
+
+function friendlyError(code) {
+  const map = {
+    'auth/user-not-found':   'No account found with that email.',
+    'auth/wrong-password':   'Incorrect password. Try again.',
+    'auth/invalid-email':    'Please enter a valid email address.',
+    'auth/too-many-requests':'Too many attempts. Try again later.',
+    'auth/invalid-credential':   'Incorrect email or password.',
+    'auth/email-already-in-use': 'An account with this email already exists.',
+    'auth/weak-password':        'Password must be at least 6 characters.',
+  };
+  return map[code] || 'Something went wrong. Please try again.';
+}
 </script>
 
 </body>

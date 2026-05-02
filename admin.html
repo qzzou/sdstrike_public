@@ -9,49 +9,34 @@
 <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: 'Barlow', sans-serif; color: #222; background: #f8f8f8; max-width: 480px; margin: 0 auto; min-height: 100vh; }
-
-  /* NAV */
+  body { font-family: 'Barlow', sans-serif; color: #222; background: #f8f8f8; max-width: 600px; margin: 0 auto; min-height: 100vh; }
   nav { display: flex; justify-content: space-between; align-items: center; padding: 2px 16px 6px; background: #fff; border-bottom: 3px solid #1a3f7a; position: sticky; top: 0; z-index: 100; }
   nav .logo img { height: 40px; display: block; }
   .nav-right { display: flex; gap: 16px; align-items: center; }
   .back-link { color: #1a3f7a; text-decoration: none; font-weight: 700; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 1px; }
   .signout-btn { background: none; border: none; color: #888; font-weight: 700; font-size: 0.82rem; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; font-family: inherit; }
-
-  /* HEADER */
   .page-header { padding: 24px 16px 0; }
   .page-header h1 { font-size: 1.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
   .page-header p { font-size: 0.85rem; color: #888; margin-top: 4px; }
-
-  /* TABS */
-  .tabs { display: flex; border-bottom: 2px solid #e8e8e8; margin: 20px 0 0; padding: 0 16px; }
-  .tab-btn { padding: 12px 14px; background: none; border: none; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #888; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; font-family: inherit; position: relative; }
+  .tabs { display: flex; border-bottom: 2px solid #e8e8e8; margin: 20px 0 0; padding: 0 16px; flex-wrap: wrap; }
+  .tab-btn { padding: 12px 14px; background: none; border: none; font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #888; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; font-family: inherit; }
   .tab-btn.active { color: #1a3f7a; border-bottom-color: #1a3f7a; }
   .tab-count { display: inline-flex; align-items: center; justify-content: center; background: #c0392b; color: #fff; border-radius: 10px; font-size: 0.65rem; font-weight: 800; min-width: 18px; height: 18px; padding: 0 5px; margin-left: 5px; }
   .tab-count.zero { background: #ccc; }
-
-  /* TAB CONTENT */
   .tab-content { padding: 20px 16px 60px; display: none; }
   .tab-content.active { display: block; }
-
-  /* CARDS */
   .card { background: #fff; border-radius: 8px; padding: 16px; margin-bottom: 12px; }
   .card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
   .card-title { font-size: 0.95rem; font-weight: 700; }
   .card-meta { font-size: 0.78rem; color: #888; margin-top: 3px; line-height: 1.4; }
-
-  /* ROLE BADGE */
   .role-badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
   .role-pending { background: #fef3e2; color: #b7600a; }
   .role-player  { background: #e8f0fe; color: #1a3f7a; }
   .role-coach   { background: #e6f4ea; color: #1e7e34; }
   .role-admin   { background: #fce4ec; color: #c2185b; }
   .role-rejected { background: #f5f5f5; color: #999; }
-
-  /* ACTION BUTTONS */
-  .btn-row { display: flex; gap: 8px; margin-top: 14px; }
-  .btn { padding: 9px 16px; border: none; border-radius: 4px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; font-family: inherit; transition: opacity 0.2s; }
-  .btn:active { opacity: 0.75; }
+  .btn-row { display: flex; gap: 8px; margin-top: 14px; flex-wrap: wrap; }
+  .btn { padding: 9px 16px; border: none; border-radius: 4px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; font-family: inherit; }
   .btn-approve { background: #1a3f7a; color: #fff; }
   .btn-reject  { background: #fff; border: 2px solid #e0e0e0; color: #888; }
   .btn-reject:hover { border-color: #c0392b; color: #c0392b; }
@@ -59,482 +44,927 @@
   .btn-secondary { background: #fff; border: 2px solid #e0e0e0; color: #555; }
   .btn-danger { background: #fff; border: 2px solid #e0e0e0; color: #c0392b; }
   .btn-sm { padding: 6px 12px; font-size: 0.72rem; }
-
-  /* EMPTY STATE */
   .empty { text-align: center; padding: 40px 16px; color: #bbb; }
   .empty .icon { font-size: 2.2rem; display: block; margin-bottom: 10px; }
-  .empty p { font-size: 0.9rem; }
-
-  /* FORM */
   .form-section { background: #fff; border-radius: 8px; padding: 20px; margin-bottom: 16px; }
   .form-section h3 { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: #888; margin-bottom: 16px; }
   .form-group { margin-bottom: 16px; }
   .form-group label { display: block; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #555; margin-bottom: 6px; }
-  .form-group input, .form-group select { width: 100%; padding: 12px 14px; border: 2px solid #e0e0e0; border-radius: 4px; font-size: 0.9rem; font-family: inherit; color: #222; outline: none; transition: border-color 0.2s; background: #fff; }
+  .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px 14px; border: 2px solid #e0e0e0; border-radius: 4px; font-size: 0.9rem; font-family: inherit; color: #222; outline: none; background: #fff; }
+  .form-group textarea { min-height: 80px; resize: vertical; }
   .form-group input:focus, .form-group select:focus { border-color: #1a3f7a; }
   .form-row { display: flex; gap: 10px; }
   .form-row .form-group { flex: 1; }
-
-  /* TEAM CARD */
   .team-card { background: #fff; border-radius: 8px; padding: 16px; margin-bottom: 10px; }
   .team-card-header { display: flex; justify-content: space-between; align-items: center; }
   .team-card h4 { font-size: 0.95rem; font-weight: 700; }
   .team-card .coach-info { font-size: 0.8rem; color: #888; margin-top: 4px; }
+  .team-card .invite-info { font-size: 0.8rem; color: #555; margin-top: 4px; font-family: 'SF Mono', Consolas, monospace; letter-spacing: 1px; }
   .team-actions { display: flex; gap: 6px; }
-
-  /* EDIT PANEL */
   .edit-panel { border: 2px solid #e8f0fe; border-radius: 6px; padding: 14px; margin-top: 12px; background: #f8faff; display: none; }
   .edit-panel.open { display: block; }
-
-  /* USER ROW */
   .user-row { background: #fff; border-radius: 8px; padding: 14px 16px; margin-bottom: 10px; }
   .user-row-header { display: flex; justify-content: space-between; align-items: flex-start; }
   .user-row-info { flex: 1; }
-  .user-role-select { font-size: 0.8rem; padding: 5px 8px; border: 2px solid #e0e0e0; border-radius: 4px; font-family: inherit; cursor: pointer; background: #fff; outline: none; }
+  .user-role-select { font-size: 0.8rem; padding: 5px 8px; border: 2px solid #e0e0e0; border-radius: 4px; font-family: inherit; cursor: pointer; background: #fff; }
   .user-row-meta { font-size: 0.78rem; color: #888; margin-top: 4px; }
-
-  /* LOADING */
-  #loadingMsg { text-align: center; padding: 60px 16px; color: #bbb; font-size: 0.9rem; }
-
-  /* TOAST */
-  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #222; color: #fff; padding: 10px 20px; border-radius: 24px; font-size: 0.85rem; font-weight: 600; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 999; white-space: nowrap; }
+  .clip-item { background: #fff; border-radius: 8px; padding: 12px; margin-bottom: 8px; display: flex; gap: 10px; align-items: flex-start; }
+  .clip-item .clip-title { font-weight: 700; font-size: 0.9rem; }
+  .clip-item .clip-meta { font-size: 0.78rem; color: #888; margin-top: 2px; }
+  .clip-item .clip-actions { margin-left: auto; display: flex; gap: 6px; }
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 200; }
+  .modal-overlay[hidden] { display: none; }
+  .modal-box { background: #fff; border-radius: 10px; padding: 24px; max-width: 400px; width: 90%; }
+  .modal-box h3 { font-size: 1.1rem; font-weight: 800; margin-bottom: 8px; }
+  .modal-box p { font-size: 0.85rem; color: #555; line-height: 1.5; }
+  .trashed { opacity: 0.6; }
+  .archived { opacity: 0.7; }
+  .archive-group-header { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: #1a3f7a; margin: 20px 0 8px; padding-bottom: 6px; border-bottom: 3px solid #1a3f7a; }
+  .archive-group-header:first-child { margin-top: 0; }
+  .team-card { position: relative; transition: border-color 0.15s, box-shadow 0.15s; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+  .team-card[style*="cursor"]:hover { border-color: #1a3f7a; box-shadow: 0 3px 10px rgba(26,63,122,0.15); }
+  .team-close { position: absolute; top: 6px; right: 6px; background: none; border: none; font-size: 18px; color: #bbb; cursor: pointer; line-height: 1; padding: 2px 6px; border-radius: 4px; z-index: 2; }
+  .team-close:hover { color: #c0392b; background: #fdecea; }
+  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #222; color: #fff; padding: 10px 20px; border-radius: 24px; font-size: 0.85rem; font-weight: 600; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 999; }
   .toast.show { opacity: 1; }
+  #loadingMsg { text-align: center; padding: 60px 16px; color: #bbb; font-size: 0.9rem; }
 </style>
 </head>
 <body>
 
 <nav>
-  <a href="index.html">
-    <img src="sdstrikelogo.svg" alt="SD Strike" style="height:40px;">
-  </a>
+  <a href="index.html"><img src="sdstrikelogo.svg" alt="SD Strike" style="height:40px;"></a>
   <div class="nav-right">
-    <a href="dashboard.html" class="back-link">← Dashboard</a>
-    <button class="signout-btn" id="signOutBtn">Sign Out</button>
+    <button class="signout-btn" data-testid="signout">Sign Out</button>
   </div>
 </nav>
 
 <div id="loadingMsg">Loading...</div>
 
-<div id="adminApp" style="display:none;">
-
+<div id="adminApp" data-testid="admin-app" style="display:none;">
   <div class="page-header">
-    <h1>Admin Panel</h1>
-    <p>Manage users, teams, and requests.</p>
+    <h1>Admin</h1>
   </div>
 
   <div class="tabs">
-    <button class="tab-btn active" data-tab="pending">
-      Pending <span class="tab-count zero" id="pendingCount">0</span>
+    <button class="tab-btn active" data-tab="pending" data-testid="tab-pending">
+      Pending <span class="tab-count zero" data-testid="pending-count">0</span>
     </button>
-    <button class="tab-btn" data-tab="teams">Teams</button>
-    <button class="tab-btn" data-tab="users">Users</button>
+    <button class="tab-btn" data-tab="teams" data-testid="tab-teams">Teams</button>
+    <button class="tab-btn" data-tab="users" data-testid="tab-users">Users</button>
+    <button class="tab-btn" data-tab="wiki" data-testid="tab-wiki">Wiki</button>
+    <button class="tab-btn" data-tab="archive" data-testid="tab-archive">
+      Archive <span class="tab-count zero" data-testid="archive-count">0</span>
+    </button>
+    <button class="tab-btn" data-tab="trash" data-testid="tab-trash">
+      Trash <span class="tab-count zero" data-testid="trash-count">0</span>
+    </button>
   </div>
 
-  <!-- ── PENDING REQUESTS TAB ─────────────────────────────────────────── -->
-  <div class="tab-content active" id="pendingTab">
-    <div id="pendingList"></div>
+  <!-- PENDING TAB -->
+  <div class="tab-content active" id="pendingTab" data-testid="pending-tab">
+    <div data-testid="pending-list"></div>
   </div>
 
-  <!-- ── TEAMS TAB ────────────────────────────────────────────────────── -->
-  <div class="tab-content" id="teamsTab">
-    <!-- Create Team Form -->
+  <!-- TEAMS TAB -->
+  <div class="tab-content" id="teamsTab" data-testid="teams-tab">
     <div class="form-section">
       <h3>Create New Team</h3>
       <div class="form-row">
         <div class="form-group">
           <label for="newTeamName">Team Name</label>
-          <input type="text" id="newTeamName" placeholder="e.g. Boys 9th-10th">
+          <input type="text" id="newTeamName" data-testid="new-team-name" placeholder="e.g. Boys 9th-10th">
         </div>
         <div class="form-group">
           <label for="newTeamAge">Age Group</label>
-          <input type="text" id="newTeamAge" placeholder="e.g. 14-15">
+          <input type="text" id="newTeamAge" data-testid="new-team-age" placeholder="e.g. 14-15">
         </div>
       </div>
-      <button class="btn btn-primary" id="createTeamBtn">Create Team</button>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Season</label>
+          <select data-testid="new-team-season">
+            <option value="">Select season</option>
+            <option value="Spring">Spring</option>
+            <option value="Summer">Summer</option>
+            <option value="Fall">Fall</option>
+            <option value="Winter">Winter</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Year</label>
+          <select data-testid="new-team-year">
+            <option value="">Select year</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Assign Coach</label>
+        <select data-testid="new-team-coach">
+          <option value="">No coach (assign later)</option>
+        </select>
+        <p style="font-size:0.75rem;color:#888;margin-top:4px;">Coach must sign in first so they appear here. Tell them to visit the sign-in page before you create the team.</p>
+      </div>
+      <button class="btn btn-primary" data-testid="create-team-btn">Create Team</button>
     </div>
-    <!-- Teams List -->
-    <div id="teamsList"></div>
+    <div data-testid="teams-list"></div>
   </div>
 
-  <!-- ── USERS TAB ─────────────────────────────────────────────────────── -->
-  <div class="tab-content" id="usersTab">
-    <div id="usersList"></div>
+  <!-- USERS TAB -->
+  <div class="tab-content" id="usersTab" data-testid="users-tab">
+    <div data-testid="users-list"></div>
   </div>
 
+  <!-- WIKI TAB -->
+  <div class="tab-content" id="wikiTab" data-testid="wiki-tab">
+    <div class="form-section">
+      <h3>Add Clip</h3>
+      <div class="form-group">
+        <label>Team</label>
+        <select data-testid="wiki-team-select"></select>
+      </div>
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" data-testid="wiki-clip-title" placeholder="e.g. Highlight — Atty">
+      </div>
+      <div class="form-group">
+        <label>Google Drive URL</label>
+        <input type="url" data-testid="wiki-clip-url" placeholder="https://drive.google.com/file/d/.../view">
+      </div>
+      <div class="form-group">
+        <label>Commentary</label>
+        <textarea data-testid="wiki-clip-commentary" placeholder="Coach's analysis..."></textarea>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" data-testid="wiki-clip-save">Add Clip</button>
+        <button class="btn btn-secondary" data-testid="wiki-clip-cancel" style="display:none">Cancel Edit</button>
+      </div>
+    </div>
+    <div data-testid="wiki-all-clips"></div>
+    <div data-testid="wiki-clips-list" hidden></div>
+  </div>
+
+  <!-- ARCHIVE TAB -->
+  <div class="tab-content" id="archiveTab" data-testid="archive-tab">
+    <div data-testid="archive-list"></div>
+  </div>
+
+  <!-- TRASH TAB -->
+  <div class="tab-content" id="trashTab" data-testid="trash-tab">
+    <div data-testid="trash-list"></div>
+  </div>
+</div>
+
+<!-- Confirm remove modal -->
+<div class="modal-overlay" data-testid="confirm-modal" hidden>
+  <div class="modal-box">
+    <h3 data-testid="confirm-title">Remove team?</h3>
+    <p data-testid="confirm-msg">This will move the team to trash. You can restore it later.</p>
+    <div class="btn-row" style="margin-top:16px;justify-content:flex-end;">
+      <button class="btn btn-secondary" data-testid="confirm-cancel">Cancel</button>
+      <button class="btn btn-danger" data-testid="confirm-proceed" style="background:#c0392b;color:#fff;border:none;">Remove</button>
+    </div>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script type="module">
-  import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js';
-  import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js';
-  import { getFirestore, doc, getDoc, setDoc, updateDoc, addDoc, getDocs, deleteDoc,
-           collection, query, where, orderBy, serverTimestamp, deleteField }
-    from 'https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js';
+import {
+  onAuthReady, signOut, getUser, updateUser,
+  listTeams, getTeam, createTeam, updateTeam,
+  listPendingUsers, approveUser, rejectUser, assignCoach,
+  listClips, addClip, updateClip, deleteClip,
+  parseDriveUrl, driveThumbnailUrl,
+} from './shared.js';
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyBvbspciyWNFHljZPvKTvW47Z0dfQwSrzM",
-    authDomain: "sdstrike-4f344.firebaseapp.com",
-    projectId: "sdstrike-4f344",
-    storageBucket: "sdstrike-4f344.firebasestorage.app",
-    messagingSenderId: "828937445096",
-    appId: "1:828937445096:web:1041315fe97bde3744735d"
-  };
+const TESTMODE = new URLSearchParams(location.search).get('testmode') === '1';
+const qs = TESTMODE ? '?testmode=1' : '';
 
-  const app  = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db   = getFirestore(app);
+let allTeams = {};
+let allUsers = [];
 
-  let allTeams = {}; // { teamId: teamData }
-  let allUsers = []; // [{ id, ...data }]
+onAuthReady(async (user) => {
+  if (!user) { window.location.href = 'signin.html' + qs; return; }
+  if (user.role !== 'admin') { window.location.href = 'dashboard.html' + qs; return; }
+  await loadAll();
+  document.getElementById('loadingMsg').style.display = 'none';
+  document.getElementById('adminApp').style.display = 'block';
+  document.body.dataset.ready = '1';
+});
 
-  // ── AUTH GUARD ────────────────────────────────────────────────────────────
-  onAuthStateChanged(auth, async (user) => {
-    if (!user) { window.location.href = 'signin.html'; return; }
-    const snap = await getDoc(doc(db, 'users', user.uid));
-    if (!snap.exists() || snap.data().role !== 'admin') {
-      window.location.href = 'dashboard.html'; return;
-    }
-    await loadAll();
-    document.getElementById('loadingMsg').style.display = 'none';
-    document.getElementById('adminApp').style.display   = 'block';
+document.querySelector('[data-testid="signout"]').addEventListener('click', async () => {
+  await signOut();
+  window.location.href = 'signin.html' + qs;
+});
+
+// TABS
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab + 'Tab').classList.add('active');
+  });
+});
+
+// LOAD ALL
+async function loadAll() {
+  const teams = await listTeams();
+  allTeams = {};
+  archivedTeams = {};
+  trashedTeams = {};
+  teams.forEach(t => {
+    if (t.permanentlyDeleted) return;
+    if (t.trashed) { trashedTeams[t.id] = t; }
+    else if (t.archived) { archivedTeams[t.id] = t; }
+    else { allTeams[t.id] = t; }
   });
 
-  document.getElementById('signOutBtn').addEventListener('click', async () => {
-    await signOut(auth);
-    window.location.href = 'signin.html';
-  });
+  // Gather all users from listPendingUsers + team members for the all-users tab
+  // In real Firebase we'd query all users; in test mode we can use __TEST.getState()
+  // For now, gather from listPendingUsers + we'll build allUsers via the shared API.
+  if (TESTMODE && window.__TEST) {
+    const state = window.__TEST.getState();
+    allUsers = Object.values(state.users);
+  } else {
+    // Load all users — admin needs full visibility.
+    const { listAllUsers } = await import('./shared.js');
+    allUsers = await listAllUsers();
+  }
+  renderPending();
+  renderTeams();
+  renderArchive();
+  renderTrash();
+  renderUsers();
+  renderWikiTeamSelect();
+  renderAllClips();
+  renderCoachDropdowns();
+}
 
-  // ── TABS ─────────────────────────────────────────────────────────────────
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById(btn.dataset.tab + 'Tab').classList.add('active');
+// PENDING
+function renderPending() {
+  // Show all pending users who requested coach role
+  const coachRequests = allUsers.filter(u =>
+    u.role === 'pending' && (u.chosenRole === 'coach' || u.requestedRole === 'coach')
+  );
+
+  // Debug: log what we have so issues are visible in console
+  console.log('All users loaded:', allUsers.length, allUsers.map(u => ({ uid: u.uid, name: u.displayName, role: u.role, chosenRole: u.chosenRole })));
+  console.log('Coach requests:', coachRequests.length);
+
+  const countEl = document.querySelector('[data-testid="pending-count"]');
+  countEl.textContent = coachRequests.length;
+  countEl.className = 'tab-count' + (coachRequests.length > 0 ? '' : ' zero');
+
+  const list = document.querySelector('[data-testid="pending-list"]');
+  if (coachRequests.length === 0) {
+    list.innerHTML = '<div class="empty"><span class="icon">&#10003;</span><p>No pending coach requests</p></div>';
+    return;
+  }
+  list.innerHTML = '';
+
+  const teamOptions = Object.values(allTeams).map(t =>
+    `<option value="${t.id}">${esc(t.name)}</option>`
+  ).join('');
+
+  coachRequests.forEach(user => {
+    const div = document.createElement('div');
+    div.className = 'card';
+    div.dataset.testid = 'pending-card';
+    div.dataset.uid = user.uid;
+    div.innerHTML = `
+      <div class="card-header">
+        <div>
+          <div class="card-title">${esc(user.displayName || 'No name')}</div>
+          <div class="card-meta">${esc(user.email)}</div>
+          <div class="card-meta" style="margin-top:6px;">Wants to be: <strong>Coach</strong></div>
+        </div>
+        <span class="role-badge role-pending">Pending</span>
+      </div>
+      <div class="form-group" style="margin-top:12px;">
+        <label>Assign to team</label>
+        <select data-testid="pending-team" data-uid="${user.uid}">
+          <option value="">Select a team</option>
+          ${teamOptions}
+        </select>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-approve" data-testid="approve-btn" data-uid="${user.uid}">Approve & Assign</button>
+        <button class="btn btn-reject" data-testid="reject-btn" data-uid="${user.uid}">Reject</button>
+      </div>`;
+    list.appendChild(div);
+  });
+  list.querySelectorAll('[data-testid="approve-btn"]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const uid = btn.dataset.uid;
+      const teamSelect = list.querySelector(`[data-testid="pending-team"][data-uid="${uid}"]`);
+      const teamId = teamSelect?.value || null;
+      if (!teamId) {
+        toast('Pick a team first.');
+        return;
+      }
+      try {
+        await approveUser(uid, { role: 'coach', teamId, membershipType: 'coach' });
+        await assignCoach(teamId, uid);
+        toast('Coach approved and assigned to team!');
+      } catch (err) {
+        console.error('Approve failed:', err);
+        toast('Error approving — check console.');
+      }
+      await loadAll();
     });
   });
+  list.querySelectorAll('[data-testid="reject-btn"]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      try {
+        await rejectUser(btn.dataset.uid);
+        toast('Rejected.');
+      } catch (err) {
+        console.error('Reject failed:', err);
+      }
+      await loadAll();
+    });
+  });
+}
 
-  // ── LOAD ALL DATA ─────────────────────────────────────────────────────────
-  async function loadAll() {
-    const [teamsSnap, usersSnap] = await Promise.all([
-      getDocs(collection(db, 'teams')),
-      getDocs(collection(db, 'users'))
-    ]);
-
-    allTeams = {};
-    teamsSnap.forEach(d => { allTeams[d.id] = { id: d.id, ...d.data() }; });
-
-    allUsers = [];
-    usersSnap.forEach(d => { allUsers.push({ id: d.id, ...d.data() }); });
-
-    renderPending();
-    renderTeams();
-    renderUsers();
+// TEAMS
+function renderTeams() {
+  const list = document.querySelector('[data-testid="teams-list"]');
+  const teams = Object.values(allTeams);
+  if (teams.length === 0) {
+    list.innerHTML = '<div class="empty"><p>No teams yet.</p></div>';
+    return;
   }
+  list.innerHTML = '';
+  teams.forEach(team => {
+    const coaches = allUsers.filter(u => {
+      const m = u.teamMemberships?.[team.id];
+      return m === 'coach';
+    });
+    const coachLabel = coaches.length ? coaches.map(c => esc(c.displayName || c.email)).join(', ') : 'None';
+    const inviteLabel = team.activeInviteCode
+      ? `Code: ${team.activeInviteCode} ${team.inviteExpiresAt && team.inviteExpiresAt < Date.now() ? '(expired)' : ''}`
+      : 'No invite code';
 
-  // ── PENDING REQUESTS ──────────────────────────────────────────────────────
-  function renderPending() {
-    const pending = allUsers.filter(u => u.role === 'pending');
-    const count = document.getElementById('pendingCount');
-    count.textContent = pending.length;
-    count.className = 'tab-count' + (pending.length > 0 ? '' : ' zero');
+    const coachOptions = allUsers.map(c =>
+      `<option value="${c.uid}" ${(team.coachIds || []).includes(c.uid) ? 'selected' : ''}>${esc(c.displayName || c.email)} (${c.role})</option>`
+    ).join('');
 
-    const list = document.getElementById('pendingList');
-    if (pending.length === 0) {
-      list.innerHTML = `<div class="empty"><span class="icon">&#10003;</span><p>No pending requests</p></div>`;
-      return;
-    }
-
-    list.innerHTML = '';
-    pending.forEach(user => {
-      const teamName = user.requestedTeamId ? (allTeams[user.requestedTeamId]?.name || 'Unknown team') : 'No team requested';
-      const roleLabel = user.requestedRole === 'coach' ? 'Coach' : 'Player / Parent';
-      const div = document.createElement('div');
-      div.className = 'card';
-      div.innerHTML = `
-        <div class="card-header">
-          <div>
-            <div class="card-title">${esc(user.displayName || 'No name')}</div>
-            <div class="card-meta">${esc(user.email)}</div>
-            <div class="card-meta" style="margin-top:6px;">
-              Wants to be: <strong>${roleLabel}</strong><br>
-              Team: <strong>${esc(teamName)}</strong>
-            </div>
+    const div = document.createElement('div');
+    div.className = 'team-card';
+    div.dataset.testid = 'team-card';
+    div.dataset.teamId = team.id;
+    const seasonLabel = [team.season, team.year].filter(Boolean).join(' ');
+    div.style.cursor = 'pointer';
+    div.addEventListener('click', (e) => {
+      // Don't navigate if clicking buttons inside the card
+      if (e.target.closest('button, select, input, .edit-panel')) return;
+      window.open('team.html?id=' + encodeURIComponent(team.id), '_blank');
+    });
+    div.innerHTML = `
+      <button class="team-close" data-testid="team-trash-btn" data-trash="${team.id}" title="Move to trash">&times;</button>
+      <div class="team-card-header">
+        <div>
+          <h4>${esc(team.name)}</h4>
+          <div class="coach-info">${team.ageGroup ? 'Ages ' + esc(team.ageGroup) + ' · ' : ''}${seasonLabel ? esc(seasonLabel) + ' · ' : ''}Coach: ${coachLabel}</div>
+          <div class="invite-info">${inviteLabel}</div>
+        </div>
+        <div class="team-actions">
+          <button class="btn btn-secondary btn-sm" data-testid="team-edit-btn" data-edit="${team.id}">Edit</button>
+          <button class="btn btn-secondary btn-sm" data-testid="team-archive-btn" data-archive="${team.id}">Archive</button>
+        </div>
+      </div>
+      <div class="edit-panel" id="edit-${team.id}">
+        <div class="form-row">
+          <div class="form-group"><label>Name</label><input type="text" data-testid="edit-name" value="${esc(team.name)}"></div>
+          <div class="form-group"><label>Age Group</label><input type="text" data-testid="edit-age" value="${esc(team.ageGroup || '')}"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Season</label>
+            <select data-testid="edit-season">
+              <option value="">—</option>
+              <option value="Spring" ${team.season==='Spring'?'selected':''}>Spring</option>
+              <option value="Summer" ${team.season==='Summer'?'selected':''}>Summer</option>
+              <option value="Fall" ${team.season==='Fall'?'selected':''}>Fall</option>
+              <option value="Winter" ${team.season==='Winter'?'selected':''}>Winter</option>
+            </select>
           </div>
-          <span class="role-badge role-pending">Pending</span>
+          <div class="form-group"><label>Year</label>
+            <select data-testid="edit-year">
+              ${buildYearOptions(team.year)}
+            </select>
+          </div>
+        </div>
+        <div class="form-group"><label>Assign Coach</label>
+          <select data-testid="edit-coach"><option value="">No coach</option>${coachOptions}</select>
         </div>
         <div class="btn-row">
-          <button class="btn btn-approve" data-action="approve" data-uid="${user.id}">Approve</button>
-          <button class="btn btn-reject"  data-action="reject"  data-uid="${user.id}">Reject</button>
-        </div>`;
-      list.appendChild(div);
-    });
+          <button class="btn btn-primary btn-sm" data-testid="team-save-btn" data-save="${team.id}">Save</button>
+          <button class="btn btn-secondary btn-sm" data-testid="team-cancel-btn" data-cancel="${team.id}">Cancel</button>
+        </div>
+      </div>`;
+    list.appendChild(div);
+  });
 
-    list.querySelectorAll('[data-action="approve"]').forEach(btn => {
-      btn.addEventListener('click', () => approveUser(btn.dataset.uid));
+  list.querySelectorAll('[data-testid="team-edit-btn"]').forEach(btn => {
+    btn.addEventListener('click', () => document.getElementById('edit-' + btn.dataset.edit).classList.toggle('open'));
+  });
+  list.querySelectorAll('[data-testid="team-cancel-btn"]').forEach(btn => {
+    btn.addEventListener('click', () => document.getElementById('edit-' + btn.dataset.cancel).classList.remove('open'));
+  });
+  list.querySelectorAll('[data-testid="team-save-btn"]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const id = btn.dataset.save;
+      const panel = document.getElementById('edit-' + id);
+      const name = panel.querySelector('[data-testid="edit-name"]').value.trim();
+      const ageGroup = panel.querySelector('[data-testid="edit-age"]').value.trim();
+      const season = panel.querySelector('[data-testid="edit-season"]').value;
+      const year = panel.querySelector('[data-testid="edit-year"]').value;
+      const coachUid = panel.querySelector('[data-testid="edit-coach"]').value;
+      if (!name) return;
+      await updateTeam(id, { name, ageGroup, season, year });
+      if (coachUid) {
+        await assignCoach(id, coachUid);
+      } else {
+        // Remove existing coaches from this team
+        const oldCoaches = allUsers.filter(u => (u.teamMemberships || {})[id] === 'coach');
+        for (const oc of oldCoaches) {
+          const newMemberships = { ...(oc.teamMemberships || {}) };
+          delete newMemberships[id];
+          await updateUser(oc.uid, { teamMemberships: newMemberships });
+        }
+        await updateTeam(id, { coachIds: [], coachId: null, coachName: null });
+      }
+      toast('Saved!');
+      await loadAll();
     });
-    list.querySelectorAll('[data-action="reject"]').forEach(btn => {
-      btn.addEventListener('click', () => rejectUser(btn.dataset.uid));
+  });
+  list.querySelectorAll('[data-testid="team-trash-btn"]').forEach(btn => {
+    btn.addEventListener('click', () => showTrashConfirm(btn.dataset.trash));
+  });
+  list.querySelectorAll('[data-testid="team-archive-btn"]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const id = btn.dataset.archive;
+      const name = allTeams[id]?.name || 'Team';
+      await updateTeam(id, { archived: true, archivedAt: Date.now() });
+      toast(`"${name}" archived.`);
+      await loadAll();
     });
-  }
+  });
+}
 
-  async function approveUser(uid) {
-    const user = allUsers.find(u => u.id === uid);
-    if (!user) return;
-    const newRole = user.requestedRole || 'player';
-    const teamId  = user.requestedTeamId || null;
-    const updates = {
-      role: newRole,
-      teamId,
-      requestedRole:   deleteField(),
-      requestedTeamId: deleteField()
-    };
-    await updateDoc(doc(db, 'users', uid), updates);
+// CONFIRM MODAL
+const confirmModal = document.querySelector('[data-testid="confirm-modal"]');
+const confirmTitle = document.querySelector('[data-testid="confirm-title"]');
+const confirmMsg = document.querySelector('[data-testid="confirm-msg"]');
+const confirmProceed = document.querySelector('[data-testid="confirm-proceed"]');
+const confirmCancel = document.querySelector('[data-testid="confirm-cancel"]');
+let confirmAction = null;
 
-    // If coach + team, update the team's coach field
-    if (newRole === 'coach' && teamId) {
-      await updateDoc(doc(db, 'teams', teamId), {
-        coachId:   uid,
-        coachName: user.displayName || user.email
-      });
-    }
-    toast('Approved!');
+function showTrashConfirm(teamId) {
+  const team = allTeams[teamId] || archivedTeams[teamId];
+  const name = team?.name || 'this team';
+  confirmTitle.textContent = `Move "${name}" to trash?`;
+  confirmMsg.textContent = 'You can restore it later from the Trash tab.';
+  confirmProceed.textContent = 'Move to trash';
+  confirmProceed.style.background = '#c0392b';
+  confirmAction = async () => {
+    await updateTeam(teamId, { trashed: true, archived: false, trashedAt: Date.now() });
+    toast(`"${name}" moved to trash.`);
     await loadAll();
-  }
+  };
+  confirmModal.hidden = false;
+}
 
-  async function rejectUser(uid) {
-    if (!confirm('Reject this request? The user will see a rejected status.')) return;
-    await updateDoc(doc(db, 'users', uid), {
-      role: 'rejected',
-      requestedRole:   deleteField(),
-      requestedTeamId: deleteField()
-    });
-    toast('Request rejected.');
+function showDeleteConfirm(teamId) {
+  const team = trashedTeams[teamId];
+  const name = team?.name || 'this team';
+  confirmTitle.textContent = `Permanently delete "${name}"?`;
+  confirmMsg.textContent = 'This cannot be undone. All team data will be lost.';
+  confirmProceed.textContent = 'Delete forever';
+  confirmProceed.style.background = '#c0392b';
+  confirmAction = async () => {
+    // For now, mark as permanently deleted (could do actual deleteDoc in future)
+    await updateTeam(teamId, { trashed: true, permanentlyDeleted: true });
+    toast(`"${name}" permanently deleted.`);
     await loadAll();
+  };
+  confirmModal.hidden = false;
+}
+
+confirmProceed.addEventListener('click', async () => {
+  confirmModal.hidden = true;
+  if (confirmAction) await confirmAction();
+  confirmAction = null;
+});
+confirmCancel.addEventListener('click', () => {
+  confirmModal.hidden = true;
+  confirmAction = null;
+});
+confirmModal.addEventListener('click', (e) => {
+  if (e.target === confirmModal) { confirmModal.hidden = true; confirmAction = null; }
+});
+
+// ARCHIVE
+let archivedTeams = {};
+
+function renderArchive() {
+  const archived = Object.values(archivedTeams);
+  const countEl = document.querySelector('[data-testid="archive-count"]');
+  countEl.textContent = archived.length;
+  countEl.className = 'tab-count' + (archived.length > 0 ? '' : ' zero');
+
+  const list = document.querySelector('[data-testid="archive-list"]');
+  if (archived.length === 0) {
+    list.innerHTML = '<div class="empty"><span class="icon">&#128230;</span><p>No archived teams.</p></div>';
+    return;
   }
 
-  // ── TEAMS ─────────────────────────────────────────────────────────────────
-  function renderTeams() {
-    const list = document.getElementById('teamsList');
-    const teams = Object.values(allTeams);
+  // Group by "Season Year", sorted newest first. Teams without season go under just the year.
+  const seasonOrder = { 'Winter': 0, 'Spring': 1, 'Summer': 2, 'Fall': 3 };
+  const groups = {};
+  archived.forEach(team => {
+    const yr = team.year || String(new Date().getFullYear());
+    const key = team.season ? `${team.season} ${yr}` : yr;
+    (groups[key] ||= []).push(team);
+  });
+  const sortedKeys = Object.keys(groups).sort((a, b) => {
+    const yA = a.match(/\d{4}/)?.[0] || '0';
+    const yB = b.match(/\d{4}/)?.[0] || '0';
+    if (yA !== yB) return Number(yB) - Number(yA); // newest year first
+    const sA = a.replace(/\s*\d{4}/, '').trim();
+    const sB = b.replace(/\s*\d{4}/, '').trim();
+    return (seasonOrder[sB] ?? 99) - (seasonOrder[sA] ?? 99); // latest season first within same year
+  });
 
-    if (teams.length === 0) {
-      list.innerHTML = `<div class="empty"><span class="icon">&#127944;</span><p>No teams yet. Create one above.</p></div>`;
-      return;
-    }
+  list.innerHTML = '';
+  sortedKeys.forEach(key => {
+    const header = document.createElement('div');
+    header.className = 'archive-group-header';
+    header.textContent = key;
+    list.appendChild(header);
 
-    list.innerHTML = '';
-    teams.forEach(team => {
-      const coaches = allUsers.filter(u => u.teamId === team.id && u.role === 'coach');
-      const coachLabel = coaches.length
-        ? coaches.map(c => esc(c.displayName || c.email)).join(', ')
-        : 'No coach assigned';
-
-      // Build coach options for assign dropdown
-      const eligibleCoaches = allUsers.filter(u => u.role === 'coach' || u.role === 'admin');
-      const coachOptions = eligibleCoaches.map(c =>
-        `<option value="${c.id}" ${team.coachId === c.id ? 'selected' : ''}>${esc(c.displayName || c.email)}</option>`
-      ).join('');
-
+    groups[key].forEach(team => {
+      const aSeasonLabel = [team.season, team.year].filter(Boolean).join(' ');
       const div = document.createElement('div');
-      div.className = 'team-card';
+      div.className = 'team-card archived';
+      div.dataset.testid = 'archive-card';
+      div.dataset.teamId = team.id;
       div.innerHTML = `
+        <button class="team-close" data-testid="archive-trash-btn" data-trash="${team.id}" title="Move to trash">&times;</button>
         <div class="team-card-header">
           <div>
             <h4>${esc(team.name)}</h4>
-            <div class="coach-info">${team.ageGroup ? 'Ages ' + esc(team.ageGroup) + ' · ' : ''}Coach: ${coachLabel}</div>
+            <div class="coach-info">${team.ageGroup ? 'Ages ' + esc(team.ageGroup) + ' · ' : ''}${aSeasonLabel ? esc(aSeasonLabel) : ''}</div>
           </div>
           <div class="team-actions">
-            <button class="btn btn-secondary btn-sm" data-edit="${team.id}">Edit</button>
-            <button class="btn btn-danger btn-sm" data-delete="${team.id}">Delete</button>
-          </div>
-        </div>
-        <div class="edit-panel" id="edit-${team.id}">
-          <div class="form-row">
-            <div class="form-group">
-              <label>Team Name</label>
-              <input type="text" id="editName-${team.id}" value="${esc(team.name)}">
-            </div>
-            <div class="form-group">
-              <label>Age Group</label>
-              <input type="text" id="editAge-${team.id}" value="${esc(team.ageGroup || '')}">
-            </div>
-          </div>
-          <div class="form-group">
-            <label>Assign Coach</label>
-            <select id="editCoach-${team.id}">
-              <option value="">No coach</option>
-              ${coachOptions}
-            </select>
-          </div>
-          <div class="btn-row">
-            <button class="btn btn-primary btn-sm" data-save="${team.id}">Save</button>
-            <button class="btn btn-secondary btn-sm" data-cancel="${team.id}">Cancel</button>
+            <button class="btn btn-primary btn-sm" data-testid="archive-restore-btn" data-restore="${team.id}">Restore</button>
           </div>
         </div>`;
       list.appendChild(div);
     });
-
-    // Edit toggle
-    list.querySelectorAll('[data-edit]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const panel = document.getElementById('edit-' + btn.dataset.edit);
-        panel.classList.toggle('open');
-      });
-    });
-
-    // Cancel edit
-    list.querySelectorAll('[data-cancel]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.getElementById('edit-' + btn.dataset.cancel).classList.remove('open');
-      });
-    });
-
-    // Save edit
-    list.querySelectorAll('[data-save]').forEach(btn => {
-      btn.addEventListener('click', () => saveTeam(btn.dataset.save));
-    });
-
-    // Delete
-    list.querySelectorAll('[data-delete]').forEach(btn => {
-      btn.addEventListener('click', () => deleteTeam(btn.dataset.delete));
-    });
-  }
-
-  async function saveTeam(teamId) {
-    const name     = document.getElementById('editName-' + teamId).value.trim();
-    const ageGroup = document.getElementById('editAge-' + teamId).value.trim();
-    const coachId  = document.getElementById('editCoach-' + teamId).value;
-    if (!name) { alert('Team name is required.'); return; }
-
-    const oldTeam  = allTeams[teamId];
-    const oldCoachId = oldTeam.coachId || null;
-    const coach    = coachId ? allUsers.find(u => u.id === coachId) : null;
-
-    await updateDoc(doc(db, 'teams', teamId), {
-      name, ageGroup,
-      coachId:   coachId || null,
-      coachName: coach ? (coach.displayName || coach.email) : null
-    });
-
-    // Update old coach's teamId if changed
-    if (oldCoachId && oldCoachId !== coachId) {
-      await updateDoc(doc(db, 'users', oldCoachId), { teamId: null });
-    }
-    // Update new coach's teamId
-    if (coachId) {
-      await updateDoc(doc(db, 'users', coachId), { teamId, role: 'coach' });
-    }
-    toast('Team saved!');
-    await loadAll();
-  }
-
-  async function deleteTeam(teamId) {
-    if (!confirm('Delete this team? This will unassign all members.')) return;
-    // Unassign all users on this team
-    const members = allUsers.filter(u => u.teamId === teamId);
-    await Promise.all(members.map(u => updateDoc(doc(db, 'users', u.id), { teamId: null })));
-    await deleteDoc(doc(db, 'teams', teamId));
-    toast('Team deleted.');
-    await loadAll();
-  }
-
-  // Create team
-  document.getElementById('createTeamBtn').addEventListener('click', async () => {
-    const name     = document.getElementById('newTeamName').value.trim();
-    const ageGroup = document.getElementById('newTeamAge').value.trim();
-    if (!name) { alert('Enter a team name.'); return; }
-    await addDoc(collection(db, 'teams'), {
-      name, ageGroup,
-      coachId: null, coachName: null,
-      createdAt: serverTimestamp()
-    });
-    document.getElementById('newTeamName').value = '';
-    document.getElementById('newTeamAge').value  = '';
-    toast('Team created!');
-    await loadAll();
   });
 
-  // ── USERS ─────────────────────────────────────────────────────────────────
-  function renderUsers() {
-    const list = document.getElementById('usersList');
-    if (allUsers.length === 0) {
-      list.innerHTML = `<div class="empty"><span class="icon">&#128100;</span><p>No users yet.</p></div>`;
-      return;
-    }
+  list.querySelectorAll('[data-testid="archive-restore-btn"]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const id = btn.dataset.restore;
+      await updateTeam(id, { archived: false, archivedAt: null });
+      toast('Team restored!');
+      await loadAll();
+    });
+  });
+  list.querySelectorAll('[data-testid="archive-trash-btn"]').forEach(btn => {
+    btn.addEventListener('click', () => showTrashConfirm(btn.dataset.trash));
+  });
+}
 
-    list.innerHTML = '';
-    const sorted = [...allUsers].sort((a, b) => (a.displayName || '').localeCompare(b.displayName || ''));
-    sorted.forEach(user => {
-      const teamName = user.teamId ? (allTeams[user.teamId]?.name || 'Unknown') : '—';
-      const teamOptions = Object.values(allTeams).map(t =>
-        `<option value="${t.id}" ${user.teamId === t.id ? 'selected' : ''}>${esc(t.name)}</option>`
-      ).join('');
+// TRASH
+let trashedTeams = {};
 
-      const div = document.createElement('div');
-      div.className = 'user-row';
-      div.innerHTML = `
-        <div class="user-row-header">
-          <div class="user-row-info">
-            <div style="font-size:0.93rem;font-weight:700;">${esc(user.displayName || 'No name')}</div>
-            <div class="user-row-meta">${esc(user.email)}</div>
-            <div class="user-row-meta" style="margin-top:4px;">Team: ${esc(teamName)}</div>
-          </div>
-          <span class="role-badge role-${user.role}">${user.role}</span>
+function renderTrash() {
+  const trashed = Object.values(trashedTeams);
+  const countEl = document.querySelector('[data-testid="trash-count"]');
+  countEl.textContent = trashed.length;
+  countEl.className = 'tab-count' + (trashed.length > 0 ? '' : ' zero');
+
+  const list = document.querySelector('[data-testid="trash-list"]');
+  if (trashed.length === 0) {
+    list.innerHTML = '<div class="empty"><span class="icon">&#128465;</span><p>Trash is empty.</p></div>';
+    return;
+  }
+  list.innerHTML = '';
+  trashed.forEach(team => {
+    const div = document.createElement('div');
+    div.className = 'team-card trashed';
+    div.dataset.testid = 'trash-card';
+    div.dataset.teamId = team.id;
+    div.innerHTML = `
+      <div class="team-card-header">
+        <div>
+          <h4>${esc(team.name)}</h4>
+          <div class="coach-info">${team.ageGroup ? 'Ages ' + esc(team.ageGroup) : ''}</div>
         </div>
-        <div class="btn-row" style="margin-top:12px;">
-          <select class="user-role-select" data-uid="${user.id}">
-            <option value="pending"  ${user.role==='pending'  ? 'selected':''}>Pending</option>
-            <option value="player"   ${user.role==='player'   ? 'selected':''}>Player</option>
-            <option value="coach"    ${user.role==='coach'    ? 'selected':''}>Coach</option>
-            <option value="admin"    ${user.role==='admin'    ? 'selected':''}>Admin</option>
-            <option value="rejected" ${user.role==='rejected' ? 'selected':''}>Rejected</option>
-          </select>
-          <select class="user-role-select" data-team-uid="${user.id}" style="flex:1;">
-            <option value="">No team</option>
-            ${teamOptions}
-          </select>
-          <button class="btn btn-primary btn-sm" data-save-user="${user.id}">Save</button>
-        </div>`;
-      list.appendChild(div);
+        <div class="team-actions">
+          <button class="btn btn-primary btn-sm" data-testid="trash-restore-btn" data-restore="${team.id}">Restore</button>
+          <button class="btn btn-danger btn-sm" data-testid="trash-delete-btn" data-delete="${team.id}">Delete forever</button>
+        </div>
+      </div>`;
+    list.appendChild(div);
+  });
+  list.querySelectorAll('[data-testid="trash-restore-btn"]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const id = btn.dataset.restore;
+      await updateTeam(id, { trashed: false, trashedAt: null });
+      toast('Team restored!');
+      await loadAll();
     });
+  });
+  list.querySelectorAll('[data-testid="trash-delete-btn"]').forEach(btn => {
+    btn.addEventListener('click', () => showDeleteConfirm(btn.dataset.delete));
+  });
+}
 
-    list.querySelectorAll('[data-save-user]').forEach(btn => {
-      btn.addEventListener('click', () => saveUser(btn.dataset.saveUser));
-    });
+// Build year <option> HTML for edit panels
+function buildYearOptions(selected) {
+  const now = new Date().getFullYear();
+  let html = '<option value="">—</option>';
+  for (let y = now + 2; y >= now - 3; y--) {
+    html += `<option value="${y}" ${String(y) === String(selected) ? 'selected' : ''}>${y}</option>`;
   }
+  return html;
+}
 
-  async function saveUser(uid) {
-    const roleEl = document.querySelector(`[data-uid="${uid}"]`);
-    const teamEl = document.querySelector(`[data-team-uid="${uid}"]`);
-    const newRole = roleEl.value;
-    const newTeam = teamEl.value || null;
-    await updateDoc(doc(db, 'users', uid), { role: newRole, teamId: newTeam });
-    // If assigned as coach to a team, update team's coachId
-    if (newRole === 'coach' && newTeam) {
-      const user = allUsers.find(u => u.id === uid);
-      await updateDoc(doc(db, 'teams', newTeam), {
-        coachId: uid,
-        coachName: user?.displayName || user?.email || ''
-      });
+// Populate year dropdown (current year -1 to +2)
+(function populateYearDropdown() {
+  const sel = document.querySelector('[data-testid="new-team-year"]');
+  const now = new Date().getFullYear();
+  for (let y = now + 2; y >= now - 1; y--) {
+    const opt = document.createElement('option');
+    opt.value = String(y);
+    opt.textContent = String(y);
+    if (y === now) opt.selected = true;
+    sel.appendChild(opt);
+  }
+})();
+
+document.querySelector('[data-testid="create-team-btn"]').addEventListener('click', async () => {
+  const name = document.querySelector('[data-testid="new-team-name"]').value.trim();
+  const ageGroup = document.querySelector('[data-testid="new-team-age"]').value.trim();
+  const season = document.querySelector('[data-testid="new-team-season"]').value;
+  const year = document.querySelector('[data-testid="new-team-year"]').value;
+  const coachUid = document.querySelector('[data-testid="new-team-coach"]').value;
+  if (!name) return;
+  const team = await createTeam({ name, ageGroup, season, year });
+  if (coachUid && team?.id) {
+    await assignCoach(team.id, coachUid);
+  }
+  document.querySelector('[data-testid="new-team-name"]').value = '';
+  document.querySelector('[data-testid="new-team-age"]').value = '';
+  document.querySelector('[data-testid="new-team-season"]').value = '';
+  document.querySelector('[data-testid="new-team-year"]').value = String(new Date().getFullYear());
+  document.querySelector('[data-testid="new-team-coach"]').value = '';
+  toast(coachUid ? 'Team created and coach assigned!' : 'Team created!');
+  await loadAll();
+});
+
+// Populate all coach dropdowns with all users
+function renderCoachDropdowns() {
+  const sel = document.querySelector('[data-testid="new-team-coach"]');
+  sel.innerHTML = '<option value="">No coach (assign later)</option>';
+  allUsers.forEach(u => {
+    const opt = document.createElement('option');
+    opt.value = u.uid;
+    opt.textContent = `${u.displayName || 'No name'} (${u.email})`;
+    sel.appendChild(opt);
+  });
+}
+
+// USERS
+function renderUsers() {
+  const list = document.querySelector('[data-testid="users-list"]');
+  if (allUsers.length === 0) {
+    list.innerHTML = '<div class="empty"><p>No users.</p></div>';
+    return;
+  }
+  list.innerHTML = '';
+
+  // Group users by team, with coaches first in each team
+  const teams = Object.values(allTeams);
+  const unassigned = [];
+  const teamGroups = {};
+
+  for (const t of teams) { teamGroups[t.id] = { team: t, coaches: [], players: [], parents: [] }; }
+
+  for (const user of allUsers) {
+    const memberships = user.teamMemberships || {};
+    const teamIds = Object.keys(memberships);
+    if (teamIds.length === 0) {
+      unassigned.push(user);
+    } else {
+      for (const tid of teamIds) {
+        if (!teamGroups[tid]) teamGroups[tid] = { team: { id: tid, name: tid }, coaches: [], players: [], parents: [] };
+        const mtype = memberships[tid];
+        if (mtype === 'coach') teamGroups[tid].coaches.push(user);
+        else if (mtype === 'parent') teamGroups[tid].parents.push(user);
+        else teamGroups[tid].players.push(user);
+      }
     }
-    toast('User updated!');
-    await loadAll();
   }
 
-  // ── HELPERS ───────────────────────────────────────────────────────────────
-  function esc(str) {
-    if (!str) return '';
-    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  // Render each team group
+  for (const g of Object.values(teamGroups)) {
+    if (g.coaches.length === 0 && g.players.length === 0 && g.parents.length === 0) continue;
+    const header = document.createElement('div');
+    header.className = 'archive-group-header';
+    header.textContent = g.team.name + (g.team.season || g.team.year ? ` · ${[g.team.season, g.team.year].filter(Boolean).join(' ')}` : '');
+    list.appendChild(header);
+
+    // Coaches
+    if (g.coaches.length > 0) {
+      const section = document.createElement('div');
+      section.className = 'team-card';
+      section.style.marginBottom = '8px';
+      section.innerHTML = '<h4 style="font-size:12px;font-weight:800;color:#1a3f7a;margin-bottom:8px;">Coaches</h4>';
+      for (const u of g.coaches) {
+        section.innerHTML += userItem(u);
+      }
+      list.appendChild(section);
+    }
+
+    // Players
+    if (g.players.length > 0) {
+      const section = document.createElement('div');
+      section.className = 'team-card';
+      section.style.marginBottom = '8px';
+      section.innerHTML = '<h4 style="font-size:12px;font-weight:800;color:#1a3f7a;margin-bottom:8px;">Players</h4>';
+      for (const u of g.players) {
+        section.innerHTML += userItem(u);
+      }
+      list.appendChild(section);
+    }
+
+    // Parents count
+    if (g.parents.length > 0) {
+      const p = document.createElement('div');
+      p.style.cssText = 'font-size:12px;color:#888;font-style:italic;margin:0 0 12px;padding:0 4px;';
+      p.textContent = `${g.parents.length} parent${g.parents.length === 1 ? '' : 's'} also following`;
+      list.appendChild(p);
+    }
   }
 
-  function toast(msg) {
-    const el = document.getElementById('toast');
-    el.textContent = msg;
-    el.classList.add('show');
-    setTimeout(() => el.classList.remove('show'), 2500);
+  // Unassigned users
+  if (unassigned.length > 0) {
+    const header = document.createElement('div');
+    header.className = 'archive-group-header';
+    header.textContent = 'No Team';
+    list.appendChild(header);
+    const section = document.createElement('div');
+    section.className = 'team-card';
+    for (const u of unassigned) {
+      section.innerHTML += userItem(u);
+    }
+    list.appendChild(section);
   }
+}
+
+function userItem(user) {
+  return `
+    <div class="user-row" data-testid="user-row" data-uid="${user.uid}" style="padding:8px 0;margin:0;background:none;border-bottom:1px solid #f0f0f0;">
+      <div class="user-row-header">
+        <div class="user-row-info">
+          <div style="font-weight:700;font-size:13px;">${esc(user.displayName || 'No name')}</div>
+          <div class="user-row-meta">${esc(user.email)}</div>
+        </div>
+        <span class="role-badge role-${user.role}" style="font-size:10px;">${user.role}</span>
+      </div>
+    </div>`;
+}
+
+// WIKI
+let editingClipId = null;
+let editingClipTeam = null;
+
+function renderWikiTeamSelect() {
+  const sel = document.querySelector('[data-testid="wiki-team-select"]');
+  sel.innerHTML = '<option value="">Select team</option>';
+  Object.values(allTeams).forEach(t => {
+    const opt = document.createElement('option');
+    opt.value = t.id;
+    opt.textContent = t.name;
+    sel.appendChild(opt);
+  });
+}
+
+async function renderAllClips() {
+  const container = document.querySelector('[data-testid="wiki-all-clips"]');
+  container.innerHTML = '';
+  const teams = Object.values(allTeams);
+  if (teams.length === 0) {
+    container.innerHTML = '<div class="empty"><p>No teams yet.</p></div>';
+    return;
+  }
+
+  let totalClips = 0;
+  for (const team of teams) {
+    const clips = await listClips(team.id);
+    if (clips.length === 0) continue;
+    totalClips += clips.length;
+
+    const header = document.createElement('div');
+    header.className = 'archive-group-header';
+    header.textContent = team.name + (team.season || team.year ? ` · ${[team.season, team.year].filter(Boolean).join(' ')}` : '');
+    container.appendChild(header);
+
+    clips.forEach(c => {
+      const div = document.createElement('div');
+      div.className = 'clip-item';
+      div.dataset.testid = 'wiki-clip-item';
+      div.dataset.clipId = c.id;
+      div.dataset.teamId = team.id;
+      div.innerHTML = `
+        <div style="flex:1;">
+          <div class="clip-title">${esc(c.title || 'Untitled')}</div>
+          <div class="clip-meta">${esc(c.commentary ? c.commentary.slice(0, 60) + (c.commentary.length > 60 ? '...' : '') : truncateUrl(c.driveUrl || ''))}</div>
+        </div>
+        <div class="clip-actions">
+          <button class="btn btn-secondary btn-sm" data-testid="wiki-edit-btn" data-id="${c.id}" data-team="${team.id}">Edit</button>
+          <button class="btn btn-danger btn-sm" data-testid="wiki-delete-btn" data-id="${c.id}" data-team="${team.id}">Delete</button>
+        </div>`;
+      container.appendChild(div);
+    });
+  }
+
+  if (totalClips === 0) {
+    container.innerHTML = '<div class="empty"><p>No clips yet. Select a team above and add one.</p></div>';
+  }
+
+  container.querySelectorAll('[data-testid="wiki-edit-btn"]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const tid = btn.dataset.team;
+      const clips = await listClips(tid);
+      const clip = clips.find(x => x.id === btn.dataset.id);
+      if (!clip) return;
+      document.querySelector('[data-testid="wiki-team-select"]').value = tid;
+      document.querySelector('[data-testid="wiki-clip-title"]').value = clip.title || '';
+      document.querySelector('[data-testid="wiki-clip-url"]').value = clip.driveUrl || '';
+      document.querySelector('[data-testid="wiki-clip-commentary"]').value = clip.commentary || '';
+      document.querySelector('[data-testid="wiki-clip-save"]').textContent = 'Save Changes';
+      document.querySelector('[data-testid="wiki-clip-cancel"]').style.display = '';
+      editingClipId = clip.id;
+      editingClipTeam = tid;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+  container.querySelectorAll('[data-testid="wiki-delete-btn"]').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      await deleteClip(btn.dataset.team, btn.dataset.id);
+      toast('Clip deleted.');
+      await renderAllClips();
+    });
+  });
+}
+
+document.querySelector('[data-testid="wiki-clip-save"]').addEventListener('click', async () => {
+  const teamId = editingClipTeam || document.querySelector('[data-testid="wiki-team-select"]').value;
+  if (!teamId) return;
+  const title = document.querySelector('[data-testid="wiki-clip-title"]').value.trim();
+  const driveUrl = document.querySelector('[data-testid="wiki-clip-url"]').value.trim();
+  const commentary = document.querySelector('[data-testid="wiki-clip-commentary"]').value.trim();
+  if (!title) return;
+  if (editingClipId) {
+    await updateClip(teamId, editingClipId, { title, driveUrl, driveFileId: parseDriveUrl(driveUrl), commentary });
+    toast('Clip updated.');
+    resetClipForm();
+  } else {
+    await addClip(teamId, { title, driveUrl, driveFileId: parseDriveUrl(driveUrl), commentary });
+    toast('Clip added.');
+    resetClipForm();
+  }
+  await renderAllClips();
+});
+
+document.querySelector('[data-testid="wiki-clip-cancel"]').addEventListener('click', resetClipForm);
+
+function resetClipForm() {
+  document.querySelector('[data-testid="wiki-clip-title"]').value = '';
+  document.querySelector('[data-testid="wiki-clip-url"]').value = '';
+  document.querySelector('[data-testid="wiki-clip-commentary"]').value = '';
+  document.querySelector('[data-testid="wiki-clip-save"]').textContent = 'Add Clip';
+  document.querySelector('[data-testid="wiki-clip-cancel"]').style.display = 'none';
+  editingClipId = null;
+  editingClipTeam = null;
+}
+
+// HELPERS
+function esc(s) { return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+function truncateUrl(s) { return s.length > 60 ? s.slice(0, 57) + '...' : s; }
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2500);
+}
 </script>
 
 </body>
