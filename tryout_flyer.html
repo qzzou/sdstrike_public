@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Free Tryout — SD Strike Girls Summer Program</title>
+  <style>
+    @page { size: letter; margin: 0.4in; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { background: #fff; color: #000; }
+    body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+
+    .flyer {
+      width: 7.7in;
+      min-height: 10.2in;
+      margin: 0 auto;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      text-align: center;
+      padding-bottom: 0.12in;
+      border-bottom: 4px solid #000;
+    }
+    .logo { width: 1.6in; height: auto; display: block; margin: 0 auto; }
+
+    .hero {
+      text-align: center;
+      padding: 0.1in 0 0.08in;
+    }
+    .headline {
+      font-size: 56pt;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+    }
+    .subtitle {
+      font-size: 20pt;
+      font-weight: 800;
+      margin-top: 0.1in;
+      letter-spacing: 0.08em;
+      line-height: 1.15;
+    }
+
+    .when-where {
+      display: flex;
+      justify-content: space-around;
+      align-items: stretch;
+      padding: 0.18in 0;
+      border-top: 2px solid #000;
+      border-bottom: 2px solid #000;
+    }
+    .ww-block { text-align: center; flex: 1; padding: 0 0.1in; }
+    .ww-block + .ww-block { border-left: 1px solid #000; }
+    .ww-label {
+      font-size: 9pt;
+      letter-spacing: 0.25em;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .ww-headline {
+      font-size: 22pt;
+      font-weight: 900;
+      margin-top: 0.04in;
+      line-height: 1;
+    }
+    .ww-sub {
+      font-size: 12pt;
+      font-weight: 700;
+      margin-top: 0.05in;
+      line-height: 1.2;
+    }
+
+    .prize-ribbon {
+      background: #000;
+      color: #fff;
+      text-align: center;
+      padding: 0.18in 0.1in;
+      margin-top: 0.14in;
+      letter-spacing: 0.04em;
+    }
+    .prize-ribbon .star { font-weight: 900; padding: 0 0.12in; font-size: 22pt; vertical-align: middle; }
+    .prize-ribbon .headline { font-size: 22pt; font-weight: 900; letter-spacing: 0.12em; line-height: 1.05; }
+    .prize-ribbon .sub { font-size: 12pt; font-weight: 700; margin-top: 0.06in; letter-spacing: 0.08em; }
+
+    .pitch {
+      padding: 0.12in 0.1in;
+      font-size: 10.5pt;
+      line-height: 1.4;
+      text-align: center;
+    }
+    .pitch strong { font-weight: 800; }
+
+    .coaches {
+      display: flex;
+      gap: 0.25in;
+      padding: 0.14in 0.1in;
+      border-top: 1px solid #000;
+      border-bottom: 1px solid #000;
+    }
+    .coach { flex: 1; }
+    .coach-name { font-size: 12pt; font-weight: 800; letter-spacing: 0.03em; }
+    .coach-role { font-size: 8.5pt; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; margin-top: 0.02in; }
+    .coach-bio { font-size: 9.5pt; margin-top: 0.06in; line-height: 1.35; }
+    .coach-bio em { font-style: italic; }
+
+    .details {
+      display: flex;
+      padding: 0.15in 0;
+      gap: 0.3in;
+    }
+    .detail { flex: 1; text-align: center; }
+    .detail-label {
+      font-size: 9pt;
+      letter-spacing: 0.25em;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .detail-value {
+      font-size: 13pt;
+      font-weight: 800;
+      margin-top: 0.04in;
+    }
+
+    .tear-off {
+      margin-top: auto;
+      border-top: 2px dashed #000;
+      padding-top: 0.08in;
+    }
+    .tear-label {
+      text-align: center;
+      font-size: 9pt;
+      letter-spacing: 0.3em;
+      font-weight: 700;
+      margin-bottom: 0.08in;
+      text-transform: uppercase;
+    }
+    .strips {
+      display: flex;
+      height: 1.5in;
+    }
+    .strip {
+      flex: 1;
+      border-left: 1px dashed #000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0.04in;
+    }
+    .strip:first-child { border-left: none; }
+    .strip img {
+      width: 0.85in;
+      height: 0.85in;
+      display: block;
+    }
+    .strip-text {
+      font-size: 7.5pt;
+      font-weight: 800;
+      margin-top: 0.04in;
+      text-align: center;
+      line-height: 1.2;
+      letter-spacing: 0.04em;
+    }
+    .strip-text .url { font-weight: 700; letter-spacing: 0; }
+
+    @media print {
+      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+  <div class="flyer">
+    <div class="header">
+      <img src="sdstrikelogo_black.svg" class="logo" alt="SD Strike">
+    </div>
+
+    <div class="hero">
+      <div class="headline">FREE TRYOUTS</div>
+      <div class="subtitle">GIRLS BASKETBALL SUMMER PROGRAM GRADES 6&ndash;8</div>
+    </div>
+
+    <div class="when-where">
+      <div class="ww-block">
+        <div class="ww-label">When</div>
+        <div class="ww-headline">Every Wednesday in May</div>
+        <div class="ww-sub">5/6 &middot; 5/13 &middot; 5/20 &middot; 5/27<br>3:45 &ndash; 4:45 PM</div>
+      </div>
+      <div class="ww-block">
+        <div class="ww-label">Where</div>
+        <div class="ww-headline">Ocean Air Rec Center</div>
+        <div class="ww-sub">Indoor Gym</div>
+      </div>
+    </div>
+
+    <div class="prize-ribbon">
+      <div class="headline"><span class="star">&#9733;</span> WIN A FREE SHOOTING SHIRT <span class="star">&#9733;</span></div>
+      <div class="sub">On-site shooting contest &middot; open to every player at tryout</div>
+    </div>
+
+    <div class="pitch">
+      <strong>SD Strike</strong> currently competes in the <strong>Sol Spring League</strong> &mdash; Girls Varsity and Girls JV divisions &mdash; <strong>leading the rankings</strong> and a strong playoff contender. Our mission: prepare players for <strong>high school basketball</strong>.
+      <br><br>
+      Practices focus on <strong>personalized skill development</strong> (ball handling, shooting, footwork, court awareness, basketball IQ), <strong>conditioning</strong>, and <strong>team play</strong>.
+    </div>
+
+    <div class="coaches">
+      <div class="coach">
+        <div class="coach-name">Chuck Brocious</div>
+        <div class="coach-role">Head Coach</div>
+        <div class="coach-bio">30+ years coaching and the founder of SD Strike. Focus: <em>basketball IQ</em> &mdash; teaching the <em>why</em> behind the game. Every player he has developed has made their high school team, with several becoming varsity leading scorers.</div>
+      </div>
+      <div class="coach">
+        <div class="coach-name">Dr. Lorri Sulpizio</div>
+        <div class="coach-role">Co-Coach &amp; Mental Performance Director</div>
+        <div class="coach-bio">PhD in Leadership, Master's in Sports Psychology, and 9 years as a collegiate women's basketball head coach. Focus: the <em>complete athlete</em> &mdash; mental toughness, conditioning, and college-level recruiting insight.</div>
+      </div>
+    </div>
+
+    <div class="details">
+      <div class="detail">
+        <div class="detail-label">Practices</div>
+        <div class="detail-value">Wed &amp; Sat &mdash; starts mid-May</div>
+      </div>
+      <div class="detail">
+        <div class="detail-label">Learn More</div>
+        <div class="detail-value">sdstrike.com</div>
+      </div>
+    </div>
+
+    <div class="tear-off">
+      <div class="tear-label">&mdash; Take One &middot; sdstrike.com &mdash;</div>
+      <div class="strips">
+        <div class="strip"><img src="qrcode.png" alt="QR"><div class="strip-text">SD STRIKE<br><span class="url">sdstrike.com</span></div></div>
+        <div class="strip"><img src="qrcode.png" alt="QR"><div class="strip-text">SD STRIKE<br><span class="url">sdstrike.com</span></div></div>
+        <div class="strip"><img src="qrcode.png" alt="QR"><div class="strip-text">SD STRIKE<br><span class="url">sdstrike.com</span></div></div>
+        <div class="strip"><img src="qrcode.png" alt="QR"><div class="strip-text">SD STRIKE<br><span class="url">sdstrike.com</span></div></div>
+        <div class="strip"><img src="qrcode.png" alt="QR"><div class="strip-text">SD STRIKE<br><span class="url">sdstrike.com</span></div></div>
+        <div class="strip"><img src="qrcode.png" alt="QR"><div class="strip-text">SD STRIKE<br><span class="url">sdstrike.com</span></div></div>
+        <div class="strip"><img src="qrcode.png" alt="QR"><div class="strip-text">SD STRIKE<br><span class="url">sdstrike.com</span></div></div>
+        <div class="strip"><img src="qrcode.png" alt="QR"><div class="strip-text">SD STRIKE<br><span class="url">sdstrike.com</span></div></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
